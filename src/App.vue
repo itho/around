@@ -10,9 +10,36 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'app'
+<script lang="ts">
+import { Component, Emit, Inject, Model, Prop, Provide, Vue, Watch } from 'vue-property-decorator'
+
+// @Component({
+//   props: {
+//     propMessage: String
+//   }
+// })
+@Component
+export default class App extends Vue {
+  // initial data
+  msg: number = 123
+
+  // use prop values for initial data
+  helloMsg: string = 'Hello, ' // + this.propMessage
+
+  // lifecycle hook
+  mounted () {
+    this.greet()
+  }
+
+  // computed
+  get computedMsg () {
+    return 'computed ' + this.msg
+  }
+
+  // method
+  greet () {
+    alert('greeting: ' + this.msg)
+  }
 }
 </script>
 
