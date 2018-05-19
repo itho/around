@@ -1,81 +1,64 @@
 <template>
-  <div id="app">
-    <header>
-      <span>Vue.js PWA</span>
-    </header>
-    <main>
-      <img src="./assets/logo.png" alt="Vue.js PWA">
+  <div id="around-app">
+    <app-toolbar/>
+
+    <transition :name="transitionName" mode="out-in">
       <router-view></router-view>
-    </main>
+    </transition>
+
+    <sign-in/>
   </div>
 </template>
 
 <script lang="ts">
+// import firebase from 'firebase'
+import axios from 'axios'
 import { Component, Emit, Inject, Model, Prop, Provide, Vue, Watch } from 'vue-property-decorator'
+import { Action, Getter } from 'vuex-class'
 
-// @Component({
-//   props: {
-//     propMessage: String
-//   }
-// })
-@Component
+import AppToolbar from './components/layout/AppToolbar.vue'
+import SignIn from './components/auth/SignIn.vue'
+
+@Component({
+  name: 'App',
+  components: {
+    AppToolbar,
+    SignIn
+  }
+})
 export default class App extends Vue {
   // initial data
-  msg: number = 123
-
-  // use prop values for initial data
-  helloMsg: string = 'Hello, ' // + this.propMessage
-
-  // lifecycle hook
-  mounted () {
-    this.greet()
-  }
+  transitionName: string = 'slide-left'
 
   // computed
-  get computedMsg () {
-    return 'computed ' + this.msg
+  userIsAuthenticated () {
+    return (this.$store.getters.user !== null && this.$store.getters.user !== undefined)
   }
 
-  // method
-  greet () {
-    alert('greeting: ' + this.msg)
+  mounted () {
+    this.redirectHandler()
+  }
+
+  redirectHandler () {
+    
+
+    if (this.userIsAuthenticated()) {
+      this.$router.push(this.$route.query.redirect)
+    }
+  }
+
+  @Watch('$route')
+  onRouteChanged(to: any, from: any) {
+    if (to.path === '/' || from.path === '/') {
+      this.transitionName = to.path === '/' ? 'slide-right' : 'slide-left'
+    } else {
+      let toDepth = to.path.split('/').length
+      let fromDepth = from.path.split('/').length
+
+      this.transitionName = toDepth < fromDepth ? 'slide-right' : 'slide-left'
+    }
   }
 }
 </script>
 
-<style>
-body {
-  margin: 0;
-}
-
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-}
-
-main {
-  text-align: center;
-  margin-top: 40px;
-}
-
-header {
-  margin: 0;
-  height: 56px;
-  padding: 0 16px 0 24px;
-  background-color: #35495E;
-  color: #ffffff;
-}
-
-header span {
-  display: block;
-  position: relative;
-  font-size: 20px;
-  line-height: 1;
-  letter-spacing: .02em;
-  font-weight: 400;
-  box-sizing: border-box;
-  padding-top: 16px;
-}
-</style>
+<style lang="scss"></style>
