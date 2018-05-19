@@ -1,0 +1,49 @@
+// Import Bulma's core
+@import "~bulma/sass/utilities/_all";
+
+// Set your colors
+$primary: rgba(69, 104, 220, 1);
+$primary-invert: findColorInvert($primary);
+$twitter: #4099FF;
+$twitter-invert: findColorInvert($twitter);
+
+// Setup $colors to use as bulma classes (e.g. 'is-twitter')
+$colors: (
+  "white": ($white, $black),
+  "black": ($black, $white),
+  "light": ($light, $light-invert),
+  "dark": ($dark, $dark-invert),
+  "primary": ($primary, $primary-invert),
+  "info": ($info, $info-invert),
+  "success": ($success, $success-invert),
+  "warning": ($warning, $warning-invert),
+  "danger": ($danger, $danger-invert),
+  "twitter": ($twitter, $twitter-invert)
+);
+
+// Links
+$link: $primary;
+$link-invert: $primary-invert;
+$link-focus-border: $primary;
+
+// Import Bulma and Buefy styles
+@import "~bulma";
+@import "~buefy/src/scss/buefy";
+
+// from bulma 0.7.0
+.has-background-white {
+  background-color: rgba(255, 255, 255, 1);
+}
+
+.has-background-white-90 {
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+// overrides
+.has-navbar-fixed-top {
+  margin-top: 52px;
+}
+
+.b-tabs .tab-content {
+  padding: 0px;
+}

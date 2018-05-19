@@ -1,0 +1,24 @@
+/* HSL */
+$color1: hsla(298%, 32%, 56%, 1);
+$color2: hsla(305%, 61%, 84%, 1);
+$color3: hsla(243%, 25%, 50%, 1);
+$color4: hsla(228%, 58%, 45%, 1);
+$color5: hsla(226%, 68%, 57%, 1);
+
+/* RGB */
+$color1: rgba(176, 106, 179, 1); // #b06ab3
+$color2: rgba(239, 189, 235, 1);
+$color3: rgba(100, 97, 160, 1);
+$color4: rgba(49, 76, 182, 1);
+$color5: rgba(69, 104, 220, 1); // #4568dc
+
+body, .brand--gradient {
+  /* https://uigradients.com/#CanYouFeelTheLoveTonight */
+  background: $color5;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, $color1, $color5);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, $color1, $color5); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.brand--primary--text {
+  color: $color3;
+}
