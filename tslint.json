@@ -1,0 +1,6 @@
+{
+  "rules": {
+    "semicolon": false,
+    "strict-export-declare-modifiers": false
+  }
+}
