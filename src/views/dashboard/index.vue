@@ -1,16 +1,21 @@
 <template>
   <section class="has-background-white">
     <b-tabs position="is-centered" class="block">
-        <b-tab-item label="around-me" icon="street-view">
+        <b-tab-item label="around-me">
           <around-map></around-map>
         </b-tab-item>
-        <b-tab-item label="quick-view" icon="list-ul">
+        <b-tab-item label="quick-view">
           456
         </b-tab-item>
-        <b-tab-item label="profile" icon="user-circle">
+        <b-tab-item label="profile">
           789
         </b-tab-item>
     </b-tabs>
+
+    <!-- <Adsense
+      data-ad-client="ca-pub-4693179382080726"
+      data-ad-slot="1487770485">
+    </Adsense> -->
 
     <Floating-action-button/>
   </section>
