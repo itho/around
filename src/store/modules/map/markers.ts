@@ -259,10 +259,55 @@ const defaultState = {
       translateX: 500,
       translateY: 220
     }
-  }
+  },
+  list: [
+    { id: 'food-drink', divider: true, title: '- Food & Drink' },
+    { id: 'beer', pack: 'fas', title: 'Beer' },
+    { id: 'glass-martini', pack: 'fas', title: 'Cocktails' },
+    { id: 'coffee', pack: 'fas', title: 'Coffee' },
+    { id: 'utensils', pack: 'fas', title: 'Food' },
+    { id: 'wine-glass', pack: 'fas', title: 'Wine' },
+
+    { id: 'outdoors', divider: true, title: '- Outdoors' },
+    { id: 'fire', pack: 'fas', title: 'Camping' },
+    { id: 'compass', pack: 'fas', title: 'Exploring' },
+    { id: 'seedling', pack: 'fas', title: 'Nature' },
+    { id: 'anchor', pack: 'fas', title: 'Nautical' },
+    { id: 'binoculars', pack: 'fas', title: 'Sightseeing' },
+    { id: 'snowflake', pack: 'fas', title: 'Snow' },
+    { id: 'sun', pack: 'fas', title: 'Sun' },
+
+    { id: 'sports', divider: true, title: '- Sports / Gaming' },
+    { id: 'baseball-ball', pack: 'fas', title: 'Baseball' },
+    { id: 'basketball-ball', pack: 'fas', title: 'Basketball' },
+    { id: 'dice', pack: 'fas', title: 'Board Games' },
+    { id: 'bowling-ball', pack: 'fas', title: 'Bowling' },
+    { id: 'chess', pack: 'fas', title: 'Chess' },
+    { id: 'football-ball', pack: 'fas', title: 'Football (American)' },
+    { id: 'futbol', pack: 'fas', title: 'Football (Soccer)' },
+    { id: 'quidditch', pack: 'fas', title: 'Quidditch' },
+    { id: 'table-tennis', pack: 'fas', title: 'Table Tennis' },
+    { id: 'gamepad', pack: 'fas', title: 'Video Gaming' },
+    { id: 'volleyball-ball', pack: 'fas', title: 'Volleyball' },
+
+    { id: 'misc', divider: true, title: '- Misc.' },
+    { id: 'paint-brush', pack: 'fas', title: 'Art' },
+    { id: 'book', pack: 'fas', title: 'Book Club' },
+    { id: 'car', pack: 'fas', title: 'Drive' },
+    { id: 'music', pack: 'fas', title: 'Music' },
+    { id: 'birthday-cake', pack: 'fas', title: 'Party' },
+    { id: 'paw', pack: 'fas', title: 'Pet Party' },
+    { id: 'bullhorn', pack: 'fas', title: 'Rally' },
+    { id: 'couch', pack: 'fas', title: 'Relaxing' },
+    { id: 'microphone-alt', pack: 'fas', title: 'Singing' },
+    { id: 'graduation-cap', pack: 'fas', title: 'Studying' },
+  ]
 }
 
 const getters = {
+  getEventIconList: (state: any) => {
+    return state.list
+  },
   getMapMarkerIcons: (state: any) => {
     return state.markers
   },
