@@ -25,11 +25,11 @@
         for (var file of chunk.files) {
           if (file.match(/\.(js|css)$/)) { %>
     <link rel="<%= chunk.initial?'preload':'prefetch' %>" href="<%= htmlWebpackPlugin.files.publicPath + file %>" as="<%= file.match(/\.css$/)?'style':'script' %>"><% }}} %>
-    <link rel="stylesheet" href="/static/css/fontawesome-all.min.css">
   </head>
   <body class="has-navbar-fixed-top">
     <noscript>
-      This is your fallback content in case JavaScript fails to load.
+      For full functionality of this site it is necessary to enable JavaScript. Here are the instructions how to enable
+      JavaScript in your web browser: <a href="https://www.enable-javascript.com/" target="_blank">www.enable-javascript.com</a>.
     </noscript>
     <div id="app"></div>
     <!-- Todo: only include in production -->
