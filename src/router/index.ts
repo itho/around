@@ -7,6 +7,9 @@ import DashboardComponent from '@/views/dashboard/index.vue'
 import EventsComponent from '@/views/events/index.vue'
 import NewEventComponent from '@/views/events/new.vue'
 import ShowEventComponent from '@/views/events/show.vue'
+import TermsComponent from '@/views/legal/terms.vue'
+import PrivacyComponent from '@/views/legal/privacy.vue'
+import CookiesComponent from '@/views/legal/cookies.vue'
 import NotFoundComponent from '@/components/NotFound.vue'
 
 Vue.use(Router)
@@ -44,6 +47,21 @@ export default new Router({
           beforeEnter: Guard.authCheck
         }
       ]
+    },
+    {
+      path: '/terms',
+      name: 'terms',
+      component: TermsComponent
+    },
+    {
+      path: '/privacy',
+      name: 'privacy',
+      component: PrivacyComponent
+    },
+    {
+      path: '/cookies',
+      name: 'cookies',
+      component: CookiesComponent
     },
     {
       path: '*',
