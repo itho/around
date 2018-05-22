@@ -2,8 +2,19 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import Buefy from "buefy"
+import fontawesome from '@fortawesome/fontawesome'
+import faSolid from '@fortawesome/fontawesome-free-solid'
+import faRegular from '@fortawesome/fontawesome-free-regular'
+import faBrands from '@fortawesome/fontawesome-free-brands'
 import * as firebase from 'firebase'
-import * as VueGoogleMaps from "vue2-google-maps"
+import * as VueGoogleMaps from 'vue2-google-maps'
+import Ads from 'vue-google-adsense'
+import VueScript2 from 'vue-script2'
+
+Vue.use(VueScript2)
+Vue.use(Ads.Adsense)
+// Vue.use(Ads.InArticleAdsense)
+// Vue.use(Ads.InFeedAdsense)
 
 import App from './App.vue'
 import router from './router'
@@ -13,14 +24,21 @@ import store from './store'
 import './assets/scss/index.scss'
 
 Vue.use(Buefy, {
+  // Override material design icon default
   defaultIconPack: 'fas',
-  // ...
 })
+
+// Import fontawesome libs
+fontawesome.library.add(
+  faSolid,
+  faRegular,
+  faBrands
+)
 
 Vue.use(VueGoogleMaps, {
   load: {
-    key: "AIzaSyBuCVQB-cv-ShH8phP4hPVQWuNsG2rJoX0",
-    libraries: "places" // This is required if you use the Autocomplete plugin
+    key: 'AIzaSyBuCVQB-cv-ShH8phP4hPVQWuNsG2rJoX0',
+    // libraries: 'places' // This is required if you use the Autocomplete plugin
     // OR: libraries: 'places,drawing'
     // OR: libraries: 'places,drawing,visualization'
     // (as you require)
