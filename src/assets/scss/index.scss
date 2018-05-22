@@ -1,4 +1,8 @@
-@import 'animation';
-@import 'brand';
+// Vendor styles
 @import 'bulma';
 @import '~css-ripple-effect';
+
+// Custom styles
+@import 'global';
+@import 'animation';
+@import 'brand';
