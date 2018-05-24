@@ -1,0 +1,190 @@
+{
+  "rules": {
+    // prevent read/writes to non-defined nodes and existing nodes without specifying ids
+    ".read": "false",
+    ".write": "false",
+    //
+    "events": {
+      // schema validation
+      "$uid": {
+        // allow signed in users to read events
+        ".read": "auth !== null",
+        // allow signed in users to add events, but not update or remove them
+        ".write": "auth !== null && !data.exists()",
+        // events must have the following children
+        ".validate": "newData.hasChildren(['description', 'icon', 'image', 'location', 'locationName', 'timestamps', 'users'])",
+        // description validation
+        "description": {
+          ".validate": "newData.isString() && newData.val().length < 250"
+        },
+        // icon validation
+        "icon": {
+          ".validate": "newData.isString() && newData.val().length < 100"
+        },
+        // image validation
+        "image": {
+          ".validate": "newData.isString() && newData.val().length < 250"
+        },
+        // Location coordinates validation
+        "location": {
+          ".validate": "newData.hasChildren(['lat', 'lng'])",
+          "lat" : {
+            ".validate": "newData.isNumber() && newData.val() >= -90 && newData.val() <= 90"
+          },
+          "lng" : {
+            ".validate": "newData.isNumber() && newData.val() >= -180 && newData.val() <= 180"
+          },
+          // don't allow any other event/location keys to be written
+          "$other": {
+            ".validate": false
+          }
+        },
+        // location name validation
+        "locationName": {
+          ".validate": "newData.isString() && newData.val().length < 250"
+        },
+        // timestamps validation
+        "timestamps": {
+          ".validate": "newData.hasChildren(['begins', 'ends'])",
+          "begins" : {
+            ".validate": "newData.isNumber() && newData.val() >= 0"
+          },
+          "ends" : {
+            ".validate": "newData.isNumber() && newData.val() >= 0"
+          },
+          // don't allow any other event/timestamps keys to be written
+          "$other": {
+            ".validate": false
+          }
+        },
+        // users validation
+        "users": {
+          "created" : {
+            ".validate": "newData.val() === auth.uid"
+          },
+          "liked" : {
+            // allow signed in users to like/unlike events
+            ".write": "auth !== null",
+            // users can only add themselves to this array with a timestamp or false value (unliking the event)
+            "$luid": {
+              ".validate": "$luid === auth.uid && ((newData.isNumber() && newData.val() >= 0) || newData.val() === false)"
+            }
+          },
+          "reported" : {
+            // allow signed in users to report/un-report events
+            ".write": "auth !== null",
+            // users can only add themselves to this array with a timestamp or false value (un-reporting the event)
+            "$ruid": {
+              ".validate": "$ruid === auth.uid && ((newData.isNumber() && newData.val() >= 0) || newData.val() === false)"
+            }
+          },
+          // don't allow any other event/users keys to be written
+          "$other": {
+            ".validate": false
+          }
+        },
+        // don't allow any other event keys to be written
+        "$other": {
+          ".validate": false
+        }
+      }
+    },
+    //
+    "event-locations": {
+      // allow signed in users to read from this node
+      ".read": "auth !== null",
+      // index each location's geohash for faster querying
+      ".indexOn": ["g"],
+      // schema validation
+      "$key": {
+        // allow signed in users to add keys in the GeoFire index, but not update or remove them
+        ".write": "auth !== null && !data.exists()",
+        // key validation
+        ".validate": "newData.hasChildren(['g', 'l']) && newData.getPriority().length <= 22 && newData.getPriority().length > 0",
+        // geohash validation
+        "g": {
+          ".validate": "newData.val() == newData.parent().getPriority()"
+        },
+        // location coordinates validation
+        "l": {
+          "0" : {
+            ".validate": "newData.isNumber() && newData.val() >= -90 && newData.val() <= 90"
+          },
+          "1" : {
+            ".validate": "newData.isNumber() && newData.val() >= -180 && newData.val() <= 180"
+          },
+          "$other": {
+            ".validate": false
+          }
+        },
+        // don't allow any other keys to be written
+        "$other": {
+          ".validate": false
+        }
+      }
+    },
+    //
+    "users": {
+      // schema validation
+      "$uid": {
+        // allow signed in users to read users
+        ".read": "auth !== null",
+        // only allow signed in users to edit their own data
+        ".write": "auth !== null && auth.uid === $uid",
+        // users must have the following children
+        ".validate": "newData.hasChildren(['id', 'name', 'photoUrl'])",
+        // id validation
+        "id": {
+          ".validate": "newData.val() === auth.uid"
+        },
+        // name validation
+        "name": {
+          ".validate": "newData.isString() && newData.val().length < 250"
+        },
+        // photoUrl validation
+        "photoUrl": {
+          ".validate": "newData.isString() && newData.val().length < 250"
+        },
+        // don't allow any other keys to be written
+        "$other": {
+          ".validate": false
+        }
+      }
+    },
+    //
+    "user-events": {
+      // schema validation
+      "$uid": {
+        // allow signed in users to read users
+        ".read": "auth !== null",
+        // only allow signed in users to edit their own data
+        ".write": "auth !== null && auth.uid === $uid",
+        // list of event ids created by the signed in user
+        "created" : {
+          // users can only add event ids to this array with a timestamp
+          "$cuid": {
+            ".validate": "newData.isNumber() && newData.val() >= 0"
+          }
+        },
+        // list of event ids liked by the signed in user
+        "liked" : {
+          // users can only add event ids to this array with a timestamp or false value (unliking the event)
+          "$luid": {
+            ".validate": "((newData.isNumber() && newData.val() >= 0) || newData.val() === false)"
+          }
+        },
+        // list of event ids reported by the signed in user
+        "reported" : {
+          // users can only add event ids to this array with a timestamp or false value (un-reporting the event)
+          "$ruid": {
+            ".validate": "((newData.isNumber() && newData.val() >= 0) || newData.val() === false)"
+          }
+        },
+        // don't allow any other keys to be written
+        "$other": {
+          ".validate": false
+        }
+      }
+    }
+  }
+}

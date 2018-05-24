@@ -1,0 +1,52 @@
+{
+  "events": {
+    "abc123": {
+      "description": "An event!",
+      "icon": "anchor",
+      "image": "/images/events/user123/12345",
+      "location": {
+        "lat": "123",
+        "lng": "789"
+      },
+      "locationName": "Aurora, ON, Canada",
+      "timestamps": {
+        "begins": 123,
+        "ends": 123
+      },
+      "users": {
+        "created": "user123",
+        "liked": {
+          "abc123": 123456789,
+          "def789": 987654321
+        },
+        "reported": {
+          "abc123": 123456789,
+          "def789": 987654321
+        }
+      }
+    }
+  },
+  "users": {
+    "user123": {
+      "id": "user123",
+      "name": "Ieuan Thomas",
+      "photoUrl": "https://lh4.googleusercontent.com/-WP6c60RYLHA/AAAAAAAAAAI/AAAAAAAAEJU/6eN4FnjteqQ/photo.jpg"
+    }
+  },
+  "user-events": {
+    "user123": {
+      "created": {
+        "abc123": 123456789,
+        "def789": 987654321
+      },
+      "liked": {
+        "abc123": 123456789,
+        "def789": 987654321
+      },
+      "reported": {
+        "abc123": 123456789,
+        "def789": 987654321
+      }
+    }
+  }
+}
