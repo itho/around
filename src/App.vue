@@ -1,5 +1,6 @@
 <template>
   <div id="around-app">
+    <b-loading is-full-page :active.sync="isLoading"></b-loading>
     <app-toolbar/>
 
     <transition :name="transitionName" mode="out-in">
@@ -30,6 +31,9 @@ export default class App extends Vue {
   // initial data
   transitionName: string = 'slide-left'
 
+  @Getter('loading') isLoading
+  @Getter('error') error
+
   // computed
   userIsAuthenticated () {
     return (this.$store.getters.user !== null && this.$store.getters.user !== undefined)
@@ -40,10 +44,20 @@ export default class App extends Vue {
   }
 
   redirectHandler () {
-    
-
     if (this.userIsAuthenticated()) {
       this.$router.push(this.$route.query.redirect)
+    }
+  }
+
+  @Watch('error')
+  onErrorChange(to: any, from: any) {
+    if (this.error) {
+      this.$toast.open({
+        duration: 5000,
+        message: this.error.message,
+        position: 'is-top',
+        type: 'is-danger'
+      })
     }
   }
 
