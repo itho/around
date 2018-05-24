@@ -3,7 +3,7 @@
     <div class="hero-body is-paddingless">
       <GmapMap
         ref="mapRef"
-        :center="center"
+        :center="location"
         :zoom="14"
         :style="'width: 100%; height: ' + computedHeight"
         :options="mapOptions"
@@ -43,29 +43,37 @@ export default class Map extends Vue {
   windowHeight: number = window.innerHeight - 41 - 52 // tab header
   
   // default to London, UK
-  center: any = {
-    lat: 43.6532, // 51.5074,
-    lng: -79.3832 // -0.1278
+  // center: any = {
+  //   lat: 43.6532, // 51.5074,
+  //   lng: -79.3832 // -0.1278
+  // }
+  get location () {
+    return {
+      lat: this.$store.state.geolocation.lat,
+      lng: this.$store.state.geolocation.lng
+    }
   }
 
-  mapPolygonPaths: any = [
-    [
-      new google.maps.LatLng(85,180),
-      new google.maps.LatLng(85,90),
-      new google.maps.LatLng(85,0),
-      new google.maps.LatLng(85,-90),
-      new google.maps.LatLng(85,-180),
-      new google.maps.LatLng(0,-180),
-      new google.maps.LatLng(-85,-180),
-      new google.maps.LatLng(-85,-90),
-      new google.maps.LatLng(-85,0),
-      new google.maps.LatLng(-85,90),
-      new google.maps.LatLng(-85,180),
-      new google.maps.LatLng(0,180),
-      new google.maps.LatLng(85,180)
-    ],
-    this.drawCircle(this.center, 10, -1)
-  ]
+  get mapPolygonPaths () {
+    return [
+      [
+        new google.maps.LatLng(85,180),
+        new google.maps.LatLng(85,90),
+        new google.maps.LatLng(85,0),
+        new google.maps.LatLng(85,-90),
+        new google.maps.LatLng(85,-180),
+        new google.maps.LatLng(0,-180),
+        new google.maps.LatLng(-85,-180),
+        new google.maps.LatLng(-85,-90),
+        new google.maps.LatLng(-85,0),
+        new google.maps.LatLng(-85,90),
+        new google.maps.LatLng(-85,180),
+        new google.maps.LatLng(0,180),
+        new google.maps.LatLng(85,180)
+      ],
+      this.drawCircle(this.location, 10, -1)
+    ]
+  }
 
   mapPolygonOptions: object = {
     strokeColor: '#a1a1a1',
@@ -82,15 +90,15 @@ export default class Map extends Vue {
 
   markers = [
     {
-      position: this.center,
+      position: this.location,
       icon: {
         url: this.getMarkerURI('user', '#209CEE')
       }
     },
     {
       position: {
-        lat: (this.center.lat + (Math.random() * 0.025)),
-        lng: (this.center.lng + (Math.random() * 0.025))
+        lat: (this.location.lat + (Math.random() * 0.025)),
+        lng: (this.location.lng + (Math.random() * 0.025))
       },
       icon: {
         url: this.getMarkerURI(this.getRandomMarkerId())
@@ -98,8 +106,8 @@ export default class Map extends Vue {
     },
     {
       position: {
-        lat: (this.center.lat + (Math.random() * 0.025)),
-        lng: (this.center.lng + (Math.random() * 0.025))
+        lat: (this.location.lat + (Math.random() * 0.025)),
+        lng: (this.location.lng + (Math.random() * 0.025))
       },
       icon: {
         url: this.getMarkerURI(this.getRandomMarkerId())
@@ -107,8 +115,8 @@ export default class Map extends Vue {
     },
     {
       position: {
-        lat: (this.center.lat + (Math.random() * 0.025)),
-        lng: (this.center.lng + (Math.random() * 0.025))
+        lat: (this.location.lat + (Math.random() * 0.025)),
+        lng: (this.location.lng + (Math.random() * 0.025))
       },
       icon: {
         url: this.getMarkerURI(this.getRandomMarkerId())
@@ -116,8 +124,8 @@ export default class Map extends Vue {
     },
     {
       position: {
-        lat: (this.center.lat + (Math.random() * 0.025)),
-        lng: (this.center.lng + (Math.random() * 0.025))
+        lat: (this.location.lat + (Math.random() * 0.025)),
+        lng: (this.location.lng + (Math.random() * 0.025))
       },
       icon: {
         url: this.getMarkerURI(this.getRandomMarkerId())
@@ -125,8 +133,8 @@ export default class Map extends Vue {
     },
     {
       position: {
-        lat: (this.center.lat + (Math.random() * 0.025)),
-        lng: (this.center.lng + (Math.random() * 0.025))
+        lat: (this.location.lat + (Math.random() * 0.025)),
+        lng: (this.location.lng + (Math.random() * 0.025))
       },
       icon: {
         url: this.getMarkerURI(this.getRandomMarkerId())
@@ -134,8 +142,8 @@ export default class Map extends Vue {
     },
     {
       position: {
-        lat: (this.center.lat + (Math.random() * 0.025)),
-        lng: (this.center.lng + (Math.random() * 0.025))
+        lat: (this.location.lat + (Math.random() * 0.025)),
+        lng: (this.location.lng + (Math.random() * 0.025))
       },
       icon: {
         url: this.getMarkerURI(this.getRandomMarkerId())
@@ -143,8 +151,8 @@ export default class Map extends Vue {
     },
     {
       position: {
-        lat: (this.center.lat + (Math.random() * 0.025)),
-        lng: (this.center.lng + (Math.random() * 0.025))
+        lat: (this.location.lat + (Math.random() * 0.025)),
+        lng: (this.location.lng + (Math.random() * 0.025))
       },
       icon: {
         url: this.getMarkerURI(this.getRandomMarkerId())
@@ -152,8 +160,8 @@ export default class Map extends Vue {
     },
     {
       position: {
-        lat: (this.center.lat + (Math.random() * 0.025)),
-        lng: (this.center.lng + (Math.random() * 0.025))
+        lat: (this.location.lat + (Math.random() * 0.025)),
+        lng: (this.location.lng + (Math.random() * 0.025))
       },
       icon: {
         url: this.getMarkerURI(this.getRandomMarkerId())
@@ -161,8 +169,8 @@ export default class Map extends Vue {
     },
     {
       position: {
-        lat: (this.center.lat + (Math.random() * 0.025)),
-        lng: (this.center.lng + (Math.random() * 0.025))
+        lat: (this.location.lat + (Math.random() * 0.025)),
+        lng: (this.location.lng + (Math.random() * 0.025))
       },
       icon: {
         url: this.getMarkerURI(this.getRandomMarkerId())
@@ -278,7 +286,7 @@ export default class Map extends Vue {
   }
 
   logPosition () {
-    console.log(this.center)
+    console.log(this.location)
   }
 }
 </script>
