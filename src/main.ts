@@ -10,6 +10,11 @@ import * as firebase from 'firebase'
 import * as VueGoogleMaps from 'vue2-google-maps'
 import Ads from 'vue-google-adsense'
 import VueScript2 from 'vue-script2'
+import VuexGeolocation from 'vuex-geolocation'
+
+import VueProgressiveImage from 'vue-progressive-image'
+
+Vue.use(VueProgressiveImage)
 
 Vue.use(VueScript2)
 Vue.use(Ads.Adsense)
@@ -60,10 +65,13 @@ Vue.use(VueGoogleMaps, {
   // installComponents: true,
 });
 
+const vuexGeolocation = VuexGeolocation.sync(store)
+Vue.use(vuexGeolocation)
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
-new Vue({
+export default new Vue({
   el: "#app",
   router,
   store,
