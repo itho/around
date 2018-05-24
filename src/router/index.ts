@@ -10,7 +10,8 @@ import ShowEventComponent from '@/views/events/show.vue'
 import TermsComponent from '@/views/legal/terms.vue'
 import PrivacyComponent from '@/views/legal/privacy.vue'
 import CookiesComponent from '@/views/legal/cookies.vue'
-import NotFoundComponent from '@/components/NotFound.vue'
+import EnableLocationComponent from '@/components/errors/LocationBlocked.vue'
+import NotFoundComponent from '@/components/errors/NotFound.vue'
 
 Vue.use(Router)
 
@@ -26,25 +27,37 @@ export default new Router({
       path: '/dashboard',
       name: 'dashboard',
       component: DashboardComponent,
-      beforeEnter: Guard.authCheck
+      beforeEnter: (to, from, next) => {
+        Guard.authCheck(to, from, next)
+        // Guard.locationEnabled(to, from, next)
+      }
     },
     {
       path: '/events',
       name: 'events',
       component: EventsComponent,
-      beforeEnter: Guard.authCheck,
+      beforeEnter: (to, from, next) => {
+        Guard.authCheck(to, from, next)
+        // Guard.locationEnabled(to, from, next)
+      },
       children: [
         {
           path: 'new',
           name: 'new-event',
           component: NewEventComponent,
-          beforeEnter: Guard.authCheck
+          beforeEnter: (to, from, next) => {
+            Guard.authCheck(to, from, next)
+            // Guard.locationEnabled(to, from, next)
+          }
         },
         {
           path: ':id',
           name: 'show-event',
           component: ShowEventComponent,
-          beforeEnter: Guard.authCheck
+          beforeEnter: (to, from, next) => {
+            Guard.authCheck(to, from, next)
+            // Guard.locationEnabled(to, from, next)
+          }
         }
       ]
     },
@@ -62,6 +75,11 @@ export default new Router({
       path: '/cookies',
       name: 'cookies',
       component: CookiesComponent
+    },
+    {
+      path: '/enable-location',
+      name: 'enable-location',
+      component: EnableLocationComponent
     },
     {
       path: '*',
