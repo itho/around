@@ -1,6 +1,13 @@
 import * as firebase from 'firebase'
 import router from '../../router'
 
+function writeUserToDatabase (id, name, photoUrl) {
+  firebase
+    .database()
+    .ref('users/' + id)
+    .set({ id, name, photoUrl })
+}
+
 export default {
   state: {
     user: null
@@ -62,6 +69,7 @@ export default {
     signUserInGoogle({ commit }, redirect = '/dashboard') {
       commit('setLoading', true)
       commit('clearError')
+      commit('setSignInModalHidden')
       firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider())
         .then(
           user => {
@@ -73,7 +81,7 @@ export default {
               photoUrl: user.photoURL
             }
             commit('setUser', newUser)
-            commit('setSignInModalHidden')
+            writeUserToDatabase(user.user.uid, user.user.displayName, user.user.photoURL)
             router.push(redirect)
           }
         )
