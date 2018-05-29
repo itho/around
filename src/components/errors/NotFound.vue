@@ -1,5 +1,5 @@
 <template>
-  <section class="section has-background-white">
+  <section class="section has-background-lightgrey">
     <div class="container">
       <h1 class="title">Page not found.</h1>
       <h2 class="subtitle">
