@@ -25,3 +25,21 @@
   transform: translateX(10px);
   opacity: 0;
 }
+
+//
+.fab-transition-enter-active,
+.fab-transition-leave-active,{
+  transition: all .5s ease;
+}
+
+.fab-transition-enter {
+  // transform: rotate(45deg) scale(0);
+  transform: scale(0);
+  opacity: 0;
+}
+
+.fab-transition-leave-to {
+  // transform: rotate(45deg) scale(0);
+  transform: scale(0);
+  opacity: 0;
+}

@@ -35,6 +35,10 @@ $link-focus-border: $primary;
   background-color: rgba(255, 255, 255, 1);
 }
 
+.has-background-lightgrey {
+  background-color: #eeeeee;
+}
+
 .has-background-white-90 {
   background-color: rgba(255, 255, 255, 0.9);
 }
@@ -46,4 +50,10 @@ $link-focus-border: $primary;
 
 .b-tabs .tab-content {
   padding: 0px;
+}
+
+@media screen and (max-width: 1023px) {
+  .is-paddingless-touch {
+    padding: 0 !important;
+  }
 }

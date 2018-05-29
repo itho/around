@@ -1,3 +1,7 @@
+#around-app {
+  min-height: calc(100vh - 52px)
+}
+
 .pl-5 {
   padding-left: 5px;
 }
@@ -48,4 +52,10 @@
 .my-5 {
   margin-top: 5px;
   margin-bottom: 5px;
+}
+
+.no-wrap-elipsis {
+  white-space: nowrap; 
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
