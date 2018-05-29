@@ -12,7 +12,7 @@
         // allow signed in users to add events, but not update or remove them
         ".write": "auth !== null && !data.exists()",
         // events must have the following children
-        ".validate": "newData.hasChildren(['description', 'icon', 'image', 'location', 'locationName', 'timestamps', 'users'])",
+        ".validate": "newData.hasChildren(['description', 'icon', 'image', 'location', 'locationName', 'theme', 'timestamps', 'users'])",
         // description validation
         "description": {
           ".validate": "newData.isString() && newData.val().length < 250"
@@ -43,13 +43,20 @@
         "locationName": {
           ".validate": "newData.isString() && newData.val().length < 250"
         },
+        // theme validation - max length 25 can fit "rgba(255, 255, 255, 0.55)"
+        "theme": {
+          ".validate": "newData.isString() && newData.val().length < 25"
+        },
         // timestamps validation
         "timestamps": {
-          ".validate": "newData.hasChildren(['begins', 'ends'])",
-          "begins" : {
+          ".validate": "newData.hasChildren(['created', 'start', 'end'])",
+          "created" : {
             ".validate": "newData.isNumber() && newData.val() >= 0"
           },
-          "ends" : {
+          "start" : {
+            ".validate": "newData.isNumber() && newData.val() >= 0"
+          },
+          "end" : {
             ".validate": "newData.isNumber() && newData.val() >= 0"
           },
           // don't allow any other event/timestamps keys to be written

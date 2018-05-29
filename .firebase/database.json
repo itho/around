@@ -10,18 +10,19 @@
       },
       "locationName": "Aurora, ON, Canada",
       "timestamps": {
-        "begins": 123,
-        "ends": 123
+        "created": 123,
+        "start": 123,
+        "end": 123
       },
       "users": {
         "created": "user123",
         "liked": {
           "abc123": 123456789,
-          "def789": 987654321
+          "def789": false
         },
-        "reported": {
+        "disliked": {
           "abc123": 123456789,
-          "def789": 987654321
+          "def789": false
         }
       }
     }
@@ -43,7 +44,7 @@
         "abc123": 123456789,
         "def789": 987654321
       },
-      "reported": {
+      "disliked": {
         "abc123": 123456789,
         "def789": 987654321
       }
