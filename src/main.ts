@@ -13,8 +13,12 @@ import VueScript2 from 'vue-script2'
 import VuexGeolocation from 'vuex-geolocation'
 
 import VueProgressiveImage from 'vue-progressive-image'
+import VueContentPlaceholders from 'vue-content-placeholders'
 
-Vue.use(VueProgressiveImage)
+Vue.use(VueProgressiveImage, {
+  // delay: 5000 // 5 seconds before the image is displayed
+})
+Vue.use(VueContentPlaceholders)
 
 Vue.use(VueScript2)
 Vue.use(Ads.Adsense)
