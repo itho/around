@@ -1,8 +1,15 @@
 // Vendor styles
 @import 'bulma';
 @import '~css-ripple-effect';
+@import 'vue-progressive-image';
 
 // Custom styles
 @import 'global';
 @import 'animation';
 @import 'brand';
+
+.vue-content-placeholders-is-rounded .vue-content-placeholders-heading__img {
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+}
