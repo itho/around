@@ -1,12 +1,19 @@
 const defaultState = {
   loading: false,
   error: null,
-  signInModal: false
+  signInModal: false,
+  gradient: null
 };
 
 const actions = {
   clearError: ({ commit }) => {
     commit('clearError')
+  },
+  setLoading: ({ commit }, payload) => {
+    commit('setLoading', payload)
+  },
+  setGradient: ({ commit }, payload) => {
+    commit('setGradient', payload)
   },
   setSignInModalHidden: ({ commit }) => {
     commit('setSignInModalHidden')
@@ -26,6 +33,9 @@ const mutations = {
   setError: (state: any, payload: any) => {
     state.error = payload
   },
+  setGradient: (state: any, payload: any) => {
+    state.gradient = payload
+  },
   clearError: (state: any) => {
     state.error = null
   },
@@ -41,10 +51,11 @@ const mutations = {
 }
 
 const getters = {
-  loading: (state: any) => state.loading,
   error: (state: any) => state.error,
-  signInModal: (state: any) => state.signInModal
-};
+  gradient: (state: any) => state.gradient,
+  loading: (state: any) => state.loading,
+  signInModal: (state: any) => state.signInModal,
+}
 
 export default {
   state: defaultState,

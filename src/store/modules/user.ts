@@ -66,7 +66,7 @@ export default {
           }
         )
     },
-    signUserInGoogle({ commit }, redirect = '/dashboard') {
+    signUserInGoogle({ commit }, redirect = '/explore') {
       commit('setLoading', true)
       commit('clearError')
       commit('setSignInModalHidden')
