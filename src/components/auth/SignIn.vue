@@ -56,7 +56,8 @@ export default class SignIn extends Vue {
   //   this.$store.dispatch('signUserIn', {email: this.email, password: this.password})
   // }
   onSigninGoogle () {
-    this.$store.dispatch('signUserInGoogle')
+    let redirect = this.$route.query.redirect
+    this.$store.dispatch('signUserInGoogle', redirect)
   }
   onSigninFacebook () {
     this.$store.dispatch('signUserInFacebook')
