@@ -1,5 +1,6 @@
 <template>
   <div id="around-app">
+    <head v-html="styles"/>
     <b-loading is-full-page :active.sync="isLoading"></b-loading>
     <app-toolbar/>
 
@@ -28,11 +29,24 @@ import SignIn from './components/auth/SignIn.vue'
   }
 })
 export default class App extends Vue {
+  @Getter('error') error
+  @Getter('gradient') gradient
+  @Getter('loading') isLoading
+
   // initial data
   transitionName: string = 'slide-left'
 
-  @Getter('loading') isLoading
-  @Getter('error') error
+  // hacky or genius?
+  get styles () {
+    return  (this.gradient)
+      ? '<style>\
+          #around-app:before {\
+            background: ' + this.gradient + ';\
+            opacity: 1;\
+          }\
+        </style>'
+      : null
+  }
 
   // computed
   userIsAuthenticated () {
@@ -75,4 +89,15 @@ export default class App extends Vue {
 }
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+#around-app:before {
+	height: 100vh;
+	width: 100vw;
+	content: '';
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	opacity: 0;
+	transition: opacity 0.4s;
+}
+</style>
