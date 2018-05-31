@@ -11,7 +11,6 @@
     <!-- Add to home screen for Android and modern mobile browsers -->
     <link rel="manifest" href="<%= htmlWebpackPlugin.files.publicPath %>static/manifest.json">
     <meta name="theme-color" content="#4568dc">
-
     <!-- Add to home screen for Safari on iOS -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -25,8 +24,10 @@
         for (var file of chunk.files) {
           if (file.match(/\.(js|css)$/)) { %>
     <link rel="<%= chunk.initial?'preload':'prefetch' %>" href="<%= htmlWebpackPlugin.files.publicPath + file %>" as="<%= file.match(/\.css$/)?'style':'script' %>"><% }}} %>
+    <!-- Roboto font & Material Icons from Google CDN -->
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic|Material+Icons">
   </head>
-  <body class="has-navbar-fixed-top">
+  <body>
     <noscript>
       For full functionality of this site it is necessary to enable JavaScript. Here are the instructions how to enable
       JavaScript in your web browser: <a href="https://www.enable-javascript.com/" target="_blank">www.enable-javascript.com</a>.
