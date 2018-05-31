@@ -1,0 +1,101 @@
+@import "~vue-material/dist/theme/engine"; // Import the theme engine
+
+@include md-register-theme("default", (
+  primary: #4568dc, // The primary color of your application
+  accent: md-get-palette-color(red, A200) // The accent or secondary color
+));
+
+@import "~vue-material/dist/theme/all"; // Apply the theme
+
+// custom
+
+[v-cloak] { display:none; }
+
+.md-app {
+  height: 100vh;
+}
+
+// disable obnoxious scrollbar
+.md-scrollbar::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+  border-radius: 0px;
+}
+
+.md-drawer {
+  width: 320px;
+}
+
+// .md-app-content {
+//   overflow: auto;
+//   margin-left: 10%;
+//   margin-right: 10%;
+// }
+
+// @media (max-width: 1024px) {
+//   .md-app-content {
+//     margin-left: 5%;
+//     margin-right: 5%;
+//   }
+// }
+
+// @media (max-width: 768px) {
+//   .md-app-content {
+//     margin-left: 0%;
+//     margin-right: 0%;
+//   }
+// }
+
+.md-app-content .md-card {
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-bottom: 16px;
+}
+
+/* @media (max-width: 768px) {
+  .md-app-content .md-card {
+    
+  }
+} */
+
+.flex-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.col.half {
+  /* max-width: 25%; */
+  width: calc(50% - 8px);
+}
+
+.col.one-third {
+  width: calc(33% - 2px);
+}
+
+.col.two-third {
+  width: calc(66% - 2px);
+}
+
+@media (max-width: 768px) {
+  .flex-grid {
+    display: block;
+  }
+  .col {
+    flex: 1 !important;
+    width: 100% !important;
+  }
+}
+
+.subtitle-icon {
+  font-size: 16px !important;
+  min-width: 16px;
+  width: 16px;
+  vertical-align: sub;
+}
+
+@media (min-width: 1280px) {
+  .md-desktop-hide {
+      display: none;
+  }
+}
