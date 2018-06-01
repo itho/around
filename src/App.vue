@@ -88,6 +88,8 @@ export default class App extends Vue {
 
   mounted () {
     this.redirectHandler()
+
+    document.getElementById('splash').classList.add('hidden')
   }
 
   redirectHandler () {
