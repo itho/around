@@ -2,320 +2,115 @@
   <section class="section is-paddingless-touch">
     <div class="container">
       <div class="tile is-ancestor is-marginless">
-        <div class="tile is-5 is-vertical is-parent is-paddingless-touch">
-          <div class="tile is-child card">
-            <div id="image" class="card-content">
-              <b-field v-if="form.files.length === 0" class="has-text-centered" style="width: 100%;">
-                <b-upload v-model="form.files" drag-drop>
-                  <section class="section">
-                    <div class="content has-text-centered">
-                      <p>
-                        <font-awesome-icon icon="image" size="4x"/>
-                      </p>
-                      <p>Drop your files here or click to upload</p>
-                    </div>
-                  </section>
-                  <p class="help has-text-grey pl-5">Required. (max. 5MB)</p>
-                </b-upload>
-              </b-field>
-              
-              <div id="thumbnail"></div>
-
-              <div class="tags">
-                <span v-for="(file, index) in form.files"
-                  :key="index"
-                  class="tag is-primary" >
-                  {{ file.name }}
-                  <button class="delete is-small"
-                    type="button"
-                    @click="deleteFormFile()">
-                  </button>
-                </span>
-              </div>
-            </div>
+        <div class="tile is-5 is-vertical is-parent">
+          <div class="tile is-child">
+            <md-card md-with-hover onclick="document.getElementById('event-image-input').click()">
+                <md-card-media-cover>
+                  <md-card-media id="event-image" :md-ratio="aspectRatio" style="background: #eee;"></md-card-media>
+                  <input id="event-image-input" type="file" style="display:none" ref="myFiles" v-on:change="onFileInputChange()"/>
+                  <md-card-area v-if="!image" style="height: 100%;">
+                    <md-card-header style="height: 100%; text-align: center;">
+                      <span class="md-title has-text-grey-dark" style="margin-top: 12%;">
+                        <md-icon class="md-size-3x">image</md-icon>
+                      </span>
+                      <span class="md-subhead has-text-grey-dark">Required. (max. 5MB)</span>
+                    </md-card-header>
+                  </md-card-area>
+                </md-card-media-cover>
+            </md-card>
           </div>
           <div class="tile is-child is-hidden-touch"></div>
         </div>
-        <div class="tile is-parent is-paddingless-touch">
-          <div class="tile is-child card">
-            <div class="card-content">
-              <div class="field">
-                <label class="label">Location</label>
-                <div class="control has-icons-left">
-                  <a v-if="!form.locationName" class="button is-fullwidth is-loading">Button</a>
-                  <span v-else>
-                    <div v-if="form.locationOptions" class="select is-fullwidth">
-                      <select v-model="form.locationName">
-                        <option v-for="(location, i) in form.locationOptions" :key="i" :value="location.formatted_address">{{ location.formatted_address }}</option>
-                      </select>
+        <div class="tile is-parent is-vertical">
+          <div id="form-tile" class="tile is-child">
+            <form novalidate class="md-layout" @submit.prevent="validateEvent">
+              <md-card class="md-layout-item">
+                <md-card-header>
+                  <div class="md-title">New Event</div>
+                </md-card-header>
+
+                <md-card-content>
+                  <md-field :class="getValidationClass('locationName')">
+                    <label for="location">Location</label>
+                    <a v-if="!form.locationName" class="button is-fullwidth is-loading">Button</a>
+                    <span class="md-prefix"><md-icon class="subtitle-icon">location_on</md-icon></span>
+                    <md-select md-autogrow name="location" id="location" v-model="form.locationName" :disabled="sending">
+                      <md-option
+                        v-for="(location, i) in form.locationOptions"
+                        :key="i"
+                        :value="location.formatted_address">
+                        {{ location.formatted_address }}
+                      </md-option>
+                    </md-select>
+                    <span class="md-error" v-if="!$v.form.locationName.required">The location is required</span>
+                    <span class="md-error" v-else-if="!$v.form.locationName.maxlength">The location is too long</span>
+                  </md-field>
+
+                  <md-field :class="getValidationClass('description')">
+                    <label for="description">Description</label>
+                    <md-textarea md-autogrow  md-counter="250" name="description" id="description" v-model="form.description" :disabled="sending" />
+                    <span class="md-error" v-if="!$v.form.description.required">The description is required</span>
+                    <span class="md-error" v-else-if="!$v.form.description.maxlength">The description is too long</span>
+                  </md-field>
+
+                  <md-field :class="getValidationClass('icon')">
+                    <label for="icon">Theme</label>
+                    <span v-if="form.icon" class="md-prefix">
+                      <font-awesome-icon :icon="form.icon" style="margin: 0 6px;"/>
+                    </span>
+                    <md-select name="icon" id="icon" v-model="form.icon" :disabled="sending">
+                      <md-optgroup v-for="(iconGroup, i) in iconList" :key="i" :label="iconGroup.title">
+                        <md-option v-for="(icon, j) in iconGroup.icons" :key="j" :value="icon.id">{{ icon.title }}</md-option>
+                      </md-optgroup>
+                    </md-select>
+                    <span class="md-error" v-if="!$v.form.icon.required">The icon is required</span>
+                  </md-field>
+
+                  <md-datepicker v-model="form.date" :md-disabled-dates="disabledDates" md-immediately>
+                    <label>Select date</label>
+                  </md-datepicker>
+
+                  <div class="md-layout md-gutter">
+                    <div class="md-layout-item md-small-size-100">
+                      <md-field>
+                        <label style="top: 0; font-size: 12px;">Select time</label>
+                        <vue-timepicker v-model="form.time" :minute-interval="10" hide-clear-button></vue-timepicker>
+                      </md-field>
                     </div>
-                    <input v-else class="input" :value="form.locationName" disabled/>
-                  </span>
-                  <div class="icon is-small is-left">
-                    <font-awesome-icon icon="map-marker"/>
-                  </div>
-                </div>
-                <p class="help has-text-grey">
-                  You are only allowed to post from your current location.
-                </p>
-              </div>
-
-              <div class="field">
-                <label class="label">Description</label>
-                <div class="control">
-                  <textarea
-                    class="textarea"
-                    placeholder="e.g. Hello world!"
-                    v-model.trim="form.description"
-                    @input="$v.form.description.$touch()"></textarea>
-                </div>
-                <p v-if="!$v.form.description.required || !$v.form.description.minLength" class="help has-text-grey">
-                  Required &amp; must have at least {{ $v.form.description.$params.minLength.min }} characters.
-                </p>
-                <p v-else class="help is-success">
-                  Required &amp; must have at least {{ $v.form.description.$params.minLength.min }} characters. ✓
-                </p>
-              </div>
-
-              <div class="field">
-                <label class="label">Type</label>
-                <div class="control has-icons-left">
-                  <div class="select is-fullwidth">
-                    <select v-model="form.icon" :class="{ 'is-danger': $v.form.icon.$error }">
-                      <option disabled value="">Please select one</option>
-                      <template v-for="icon in iconList">
-                        <option v-if="icon.divider" :key="icon.id" disabled value="">{{ icon.title }}</option>
-                        <option v-else :key="icon.id" :value="icon.id">{{ icon.title }}</option>
-                      </template>
-                    </select>
-                  </div>
-                  <div class="icon is-small is-left">
-                    <font-awesome-icon :icon="form.icon || 'question'"/>
-                  </div>
-                </div>
-                <p v-if="!$v.form.icon.required" class="help has-text-grey">Required.</p>
-                <p v-else class="help is-success">Required. ✓</p>
-              </div>
-
-              <div class="columns">
-                <div class="column">
-                  <b-field label="Date" style="margin-bottom: 0.25rem;">
-                    <b-datepicker
-                      v-model="form.date"
-                      :min-date="form.minDate"
-                      :max-date="form.maxDate">
-                    </b-datepicker>
-                  </b-field>
-                  <p class="help has-text-grey">Must be within one week.</p>
-                </div>
-                <div class="column">
-                  <b-field label="Time">
-                    <b-timepicker v-model="form.time">
-                      <button class="button is-primary"
-                        @click="form.time = new Date()">
-                        <font-awesome-icon icon="clock" size="xs" pull="left"/>
-                        <span>Now</span>
-                      </button>
-                    </b-timepicker>
-                  </b-field>
-                </div>
-                <div class="column">
-                  <label class="label">Duration</label>
-                  <div class="control">
-                    <div class="select is-fullwidth">
-                      <select v-model="form.duration">
-                        <option v-for="i in 24" :key="i" :value="i">{{ i }} hour{{ (i > 1) ? 's' : '' }}</option>
-                      </select>
+                    <div class="md-layout-item md-small-size-100">
+                      <md-field :class="getValidationClass('duration')">
+                        <label for="duration">Select duration</label>
+                        <md-select name="duration" id="duration" v-model="form.duration" :disabled="sending">
+                          <md-option v-for="i in 24" :key="i" :value="i">{{ i }} hour{{ (i > 1) ? 's' : '' }}</md-option>
+                        </md-select>
+                      </md-field>
                     </div>
                   </div>
-                </div>
-              </div>
+                </md-card-content>
 
-              <div class="columns is-mobile">
-                <div class="column is-narrow">
-                  <a
-                    class="button is-primary is-outlined"
-                    :class="{ 'is-loading': formIsLoading }"
-                    @click="addPost()"
-                    :disabled="formIsInvalid">
-                    Submit
-                  </a>
-                </div>
-                <div class="column">&nbsp;</div>
-                <div class="column is-narrow">
-                  <a class="button is-info is-outlined" @click="resetForm()" :disabled="!formIsResetable || formIsDisabled">
-                    <font-awesome-icon icon="undo" size="xs" pull="left"/>
-                    <span>Reset</span>
-                  </a>
-                </div>
-              </div>
-            </div>
+                <md-card-actions>
+                  <md-button type="submit" class="md-primary" :disabled="formIsInvalid || sending">Create event</md-button>
+                </md-card-actions>
+                <md-progress-bar md-mode="indeterminate" v-if="sending" />
+              </md-card>
+            </form>
           </div>
         </div>
       </div>
-      </div>
-
-
-      <!-- <h1 class="title">New Event</h1>
-      <div class="event">
-        <div class="columns">
-          <div id="image" class="column is-narrow">
-            <b-field v-if="form.files.length === 0" class="has-text-centered" style="width: 100%;">
-              <b-upload v-model="form.files" drag-drop>
-                <section class="section">
-                  <div class="content has-text-centered">
-                    <p>
-                      <font-awesome-icon icon="image" size="4x"/>
-                    </p>
-                    <p>Drop your files here or click to upload</p>
-                  </div>
-                </section>
-                <p class="help has-text-grey pl-5">Required. (max. 5MB)</p>
-              </b-upload>
-            </b-field>
-            
-            <div id="thumbnail"></div>
-
-            <div class="tags">
-              <span v-for="(file, index) in form.files"
-                :key="index"
-                class="tag is-primary" >
-                {{ file.name }}
-                <button class="delete is-small"
-                  type="button"
-                  @click="deleteFormFile()">
-                </button>
-              </span>
-            </div>
-          </div>
-
-          <div class="column">
-            <div class="field">
-              <label class="label">Location</label>
-              <div class="control has-icons-left">
-                <a v-if="!form.locationName" class="button is-fullwidth is-loading">Button</a>
-                <span v-else>
-                  <div v-if="form.locationOptions" class="select is-fullwidth">
-                    <select v-model="form.locationName">
-                      <option v-for="(location, i) in form.locationOptions" :key="i" :value="location.formatted_address">{{ location.formatted_address }}</option>
-                    </select>
-                  </div>
-                  <input v-else class="input" :value="form.locationName" disabled/>
-                </span>
-                <div class="icon is-small is-left">
-                  <font-awesome-icon icon="map-marker"/>
-                </div>
-              </div>
-              <p class="help has-text-grey">
-                You are only allowed to post from your current location.
-              </p>
-            </div>
-
-            <div class="field">
-              <label class="label">Description</label>
-              <div class="control">
-                <textarea
-                  class="textarea"
-                  placeholder="e.g. Hello world!"
-                  v-model.trim="form.description"
-                  @input="$v.form.description.$touch()"></textarea>
-              </div>
-              <p v-if="!$v.form.description.required || !$v.form.description.minLength" class="help has-text-grey">
-                Required &amp; must have at least {{ $v.form.description.$params.minLength.min }} characters.
-              </p>
-              <p v-else class="help is-success">
-                Required &amp; must have at least {{ $v.form.description.$params.minLength.min }} characters. ✓
-              </p>
-            </div>
-
-            <div class="field">
-              <label class="label">Type</label>
-              <div class="control has-icons-left">
-                <div class="select is-fullwidth">
-                  <select v-model="form.icon" :class="{ 'is-danger': $v.form.icon.$error }">
-                    <option disabled value="">Please select one</option>
-                    <template v-for="icon in iconList">
-                      <option v-if="icon.divider" :key="icon.id" disabled value="">{{ icon.title }}</option>
-                      <option v-else :key="icon.id" :value="icon.id">{{ icon.title }}</option>
-                    </template>
-                  </select>
-                </div>
-                <div class="icon is-small is-left">
-                  <font-awesome-icon :icon="form.icon || 'question'"/>
-                </div>
-              </div>
-              <p v-if="!$v.form.icon.required" class="help has-text-grey">Required.</p>
-              <p v-else class="help is-success">Required. ✓</p>
-            </div>
-
-            <div class="columns">
-              <div class="column">
-                <b-field label="Date" style="margin-bottom: 0.25rem;">
-                  <b-datepicker
-                    v-model="form.date"
-                    :min-date="form.minDate"
-                    :max-date="form.maxDate">
-                  </b-datepicker>
-                </b-field>
-                <p class="help has-text-grey">Must be within one week.</p>
-              </div>
-              <div class="column">
-                <b-field label="Time">
-                  <b-timepicker v-model="form.time">
-                    <button class="button is-primary"
-                      @click="form.time = new Date()">
-                      <font-awesome-icon icon="clock" size="xs" pull="left"/>
-                      <span>Now</span>
-                    </button>
-                  </b-timepicker>
-                </b-field>
-              </div>
-              <div class="column">
-                <label class="label">Duration</label>
-                <div class="control">
-                  <div class="select is-fullwidth">
-                    <select v-model="form.duration">
-                      <option v-for="i in 24" :key="i" :value="i">{{ i }} hour{{ (i > 1) ? 's' : '' }}</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="columns is-mobile">
-              <div class="column is-narrow">
-                <a
-                  class="button is-primary is-outlined"
-                  :class="{ 'is-loading': formIsLoading }"
-                  @click="addPost()"
-                  :disabled="formIsInvalid">
-                  Submit
-                </a>
-              </div>
-              <div class="column">&nbsp;</div>
-              <div class="column is-narrow">
-                <a class="button is-info is-outlined" @click="resetForm()" :disabled="!formIsResetable || formIsDisabled">
-                  <font-awesome-icon icon="undo" size="xs" pull="left"/>
-                  <span>Reset</span>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div> -->
+    </div>
   </section>
 </template>
 
 <script lang="ts">
 import * as ColorThief from '@mariotacke/color-thief'
+import { Action, Getter } from 'vuex-class'
 import { Component, Vue, Watch } from 'vue-property-decorator'
-import { Getter } from 'vuex-class'
 import { maxLength, minLength, required  } from 'vuelidate/lib/validators'
 import { validationMixin } from 'vuelidate'
 import firebase from 'firebase'
 import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
 import geofire from 'geofire'
+import VueTimepicker from 'vue2-timepicker'
 
 const colorThief = new ColorThief()
 
@@ -332,7 +127,7 @@ interface NewEventForm {
 
 const NewEventFormValidations = {
   form: {
-    description: { required, minLength: minLength(10), maxLength: maxLength(250) },
+    description: { required, maxLength: maxLength(250) },
     icon: { required, maxLength: maxLength(100) },
     locationName: { required, maxLength: maxLength(250) }
   }
@@ -340,13 +135,18 @@ const NewEventFormValidations = {
 
 @Component({
   name: 'NewEvent',
-  components: { FontAwesomeIcon },
+  components: { FontAwesomeIcon, VueTimepicker },
   mixins: [ validationMixin ],
   validations: NewEventFormValidations
 })
 export default class NewEvent extends Vue {
+  @Action('setError') setError
+  @Action('setSuccess') setSuccess
   @Getter('user') user
   @Getter('getEventIconList') iconList
+  
+  sending: boolean = false
+  tenMinutesInMilli: number = 1000 * 60 * 10
 
   form: any = {
     date: new Date(),
@@ -361,7 +161,10 @@ export default class NewEvent extends Vue {
     maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 6),
     now: new Date(),
     theme: null,
-    time: new Date(),
+    time: {
+      HH: new Date().getHours(),
+      mm: new Date(Math.ceil(new Date().getTime() / this.tenMinutesInMilli) * this.tenMinutesInMilli).getMinutes()
+    },
     users: {
       created: null,
       liked: {},
@@ -393,7 +196,7 @@ export default class NewEvent extends Vue {
 
     let begins = new Date(
       this.form.date.getFullYear(), this.form.date.getMonth(), this.form.date.getDate(), 
-      this.form.time.getHours(), this.form.time.getMinutes(), this.form.time.getSeconds()
+      this.form.time.HH, this.form.time.mm
     )
 
     let start = begins.getTime()
@@ -405,7 +208,7 @@ export default class NewEvent extends Vue {
   get formIsInvalid (): boolean {
     return !!(
       this.$v.$invalid ||
-      this.form.files.length === 0 ||
+      this.image === null ||
       this.form.isDisabled
     )
   }
@@ -432,8 +235,33 @@ export default class NewEvent extends Vue {
     return !this.formIsInvalid
   }
 
+  disabledDates (date) {
+    let minDate = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate())
+    let maxDate = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 6)
+
+    return !(date >= minDate && date <= maxDate)
+  }
+
   mounted () {
     this.getLocationName()
+  }
+
+  getValidationClass (fieldName) {
+    const field = this.$v.form[fieldName]
+
+    if (field) {
+      return {
+        'md-invalid': field.$invalid && field.$dirty
+      }
+    }
+  }
+
+  validateEvent () {
+    this.$v.form.$touch()
+
+    if (!this.$v.$invalid) {
+      this.addPost()
+    }
   }
 
   get location () {
@@ -460,41 +288,24 @@ export default class NewEvent extends Vue {
             vm.form.locationOptions = results
           }
         } else {
-          vm.$toast.open({
-            duration: 5000,
-            message: 'No location results found!',
-            position: 'is-bottom',
-            type: 'is-danger'
-          })
+          vm.setError({ message: 'No location results found!' })
         }
       } else {
         if (vm.$store.state.geolocation.lat !== null || vm.$store.state.geolocation.lng !== null) {
-          vm.$toast.open({
-            duration: 5000,
-            message: 'Unable to find location',
-            position: 'is-bottom',
-            type: 'is-danger'
-          })
+          vm.setError({ message: 'Unable to find location' })
         }
       }
     })
-  }
-
-  // 
-  deleteFormFile (index: number = 0) {
-    this.form.files.splice(index, 1)
-    this.form.theme = null
-    document.getElementById('thumbnail').innerHTML = ''
   }
   
   // 
   resetForm () {
     if (this.formIsResetable) {
       this.form.description = this.form.icon = ''
-      this.form.isDisabled = this.form.isLoading = false
-      this.deleteFormFile()
+      this.form.isDisabled = this.form.isLoading = this.sending = false
+      this.resetImage()
       this.form.date = new Date()
-      this.form.time = new Date()
+      // this.form.time = new Date()
       this.form.duration = 1
     }
   }
@@ -505,53 +316,58 @@ export default class NewEvent extends Vue {
     this.getLocationName()
   }
 
-  @Watch('form.files')
-  onFormFilesChanged(newVal: string, oldVal: string) {
-    // Skip when the change is a reset of the file
-    if (this.form.files.length === 0) return
+  get aspectRatio () {
+    return (this.image) ? null : '16/9'
+  }
 
-    let file = this.form.files[0]
+  public $refs: any ={
+    myFiles: FileList
+  }
+
+  image: any = null
+  onFileInputChange () {
+    this.resetImage()
+    this.image = this.$refs.myFiles.files[0]
+    if (this.image === undefined) return
+
     let imageType = /image.*/
-
     // Reject non-images and those over 5MB
-    if (!file.type.match(imageType) || file.size > 5242880) {
-      this.$toast.open({
-        duration: 5000,
-        message: 'Please select an image file under 5MB!',
-        position: 'is-bottom',
-        type: 'is-danger'
-      })
-
-      this.deleteFormFile()
+    if (!this.image.type.match(imageType) || this.image.size > 5242880) {
+      this.setError({ message: 'Please select an image file under 5MB!' })
+      this.resetImage()
       return
     }
 
-    let image = document.createElement('img')
-    let thumbnail = document.getElementById('thumbnail')
-    thumbnail.appendChild(image)
+    const vm = this
+    let frame = document.getElementById('event-image') as HTMLImageElement
+    let img = document.createElement('img')
+    frame.appendChild(img)
 
     let reader = new FileReader()
-    reader.onload = (function(aImg){
-      return function(e){
-        aImg.src = e.target.result;
+    reader.onload = (function (aImg) {
+      return (e) => {
+        aImg.src = e.target.result
       };
-    }(image))
+    }(img))
 
-    let ret = reader.readAsDataURL(file)
+    let ret = reader.readAsDataURL(this.image)
     let canvas = document.createElement('canvas')
     let ctx = canvas.getContext('2d')
 
-    const vm = this
-
-    image.onload = () => {
-      ctx.drawImage(image, 100, 100)
+    img.onload = () => {
+      ctx.drawImage(img, 100, 100)
 
       // grab the dominant color from the image and use as a theme
-      let rgbArr = colorThief.getColor(image)
+      let rgbArr = colorThief.getColor(img)
       let rgbStr = 'rgb(' + rgbArr[0] + ',' + rgbArr[1] + ',' + rgbArr[2] + ')'
-
       vm.form.theme = rgbStr
     }
+  }
+
+  resetImage () {
+    this.image = null
+    this.form.theme = null
+    document.getElementById('event-image').innerHTML = ''
   }
 
   // 
@@ -560,7 +376,7 @@ export default class NewEvent extends Vue {
       // 1. upload image to firebase storage
       // 2. upload event to geofire with image ref
 
-      this.form.isDisabled = this.form.isLoading = true
+      this.form.isDisabled = this.form.isLoading = this.sending = true
       this.form.users.created = this.user.id
       this.form.users.liked[this.user.id] = new Date().getTime()
       this.form.users.reported[this.user.id] = false
@@ -571,7 +387,7 @@ export default class NewEvent extends Vue {
       await firebase.storage()
         .ref()
         .child(imageRef)
-        .put(this.form.files[0])
+        .put(this.image)
         .then(response => {
           // set the event from image to the image path
           this.form.image = response.metadata.fullPath
@@ -592,12 +408,7 @@ export default class NewEvent extends Vue {
               break;
           }
 
-          this.$toast.open({
-            duration: 5000,
-            message,
-            position: 'is-bottom',
-            type: 'is-danger'
-          })
+          this.setError({ message })
         })
       
       // add the event to the firebase database
@@ -630,34 +441,18 @@ export default class NewEvent extends Vue {
                 console.log(error)
               })
 
-            this.$toast.open({
-              duration: 5000,
-              message: 'Event added!',
-              position: 'is-bottom',
-              type: 'is-success'
-            })
+            this.setSuccess({ message: 'Event added!' })
             this.$router.push({ name: 'show-event', params: { id: newEventKey }})
           })
           .catch(error => {
             console.log(error)
-
-            this.$toast.open({
-              duration: 5000,
-              message: 'Unable to add event!',
-              position: 'is-bottom',
-              type: 'is-danger'
-            })
+            this.setError({ message: 'Unable to add event!' })
           })
       }
     } else {
-      this.$toast.open({
-        duration: 5000,
-        message: 'Invalid event!',
-        position: 'is-bottom',
-        type: 'is-danger'
-      })
+      this.setError({ message: 'Invalid event!' })
     }
-    this.form.isDisabled = this.form.isLoading = false
+    this.form.isDisabled = this.form.isLoading = this.sending = false
   }
 }
 </script>
@@ -668,14 +463,46 @@ export default class NewEvent extends Vue {
     margin: 0 auto;
   }
 
-  .upload-draggable {
-    width: 100%;
+  @media (max-width: 768px) {
+    #form-tile {
+      margin-top: -32px !important;
+    }
   }
 
-  // prevent dropdown date/timepickers not wrapping content
-  .dropdown.is-active .dropdown-menu,
-  .dropdown.is-hoverable:hover .dropdown-menu {
-    min-width: 100% !important;
-    width: auto !important;
+  .subtitle-icon {
+    font-size: 20px !important;
+    min-width: 16px;
+    width: 16px;
+    vertical-align: sub;
+    margin: 0 5px;
+  }
+
+  // vue-material datepicer overrides
+  strong.md-datepicker-dayname,
+  strong.md-datepicker-monthname,
+  strong.md-datepicker-day {
+    color: white;
+  }
+
+  // vue-timepicker overrides
+  .time-picker,
+  .time-picker input.display-time {
+    width: 100% !important;
+    border: none !important;
+  }
+
+  .time-picker .dropdown ul li.active,
+  .time-picker .dropdown ul li.active:hover {
+    background: #4568dc !important;
+    color: #fff !important;
+  }
+
+  .time-picker .dropdown {
+    height: 16em !important;
+    box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12) !important;
+  }
+
+  .time-picker .dropdown .select-list {
+    height: 16em !important;
   }
 </style>

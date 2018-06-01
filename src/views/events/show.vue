@@ -3,10 +3,12 @@
     <div class="container">
       <div class="tile is-ancestor is-marginless">
         <div class="tile is-5 is-vertical is-parent is-paddingless-touch">
-          <div class="tile is-child card">
-            <div class="card-image">
-              <figure id="event-image" class="image">
-                <progressive-img :src="event.image" :aspect-ratio="aspectRatio" @onLoad="setAspectRatio">
+          <div class="tile is-child">
+            <md-card style="margin-bottom: 0px;">                 
+              <md-card-media>
+                <progressive-img
+                  :src="event.image"
+                  :aspect-ratio="aspectRatio">
                   <div
                     slot-scope="{ visible }"
                     v-if="visible"
@@ -14,61 +16,35 @@
                     :style="(event.theme) ? 'background: ' + event.theme + ';' : ''">
                   </div>
                 </progressive-img>
-              </figure>
-            </div>
-            <div class="card-content">
+              </md-card-media>
+              <md-card-content style="padding: 0;">
+                <content-placeholders v-if="!snapshot" rounded style="padding: 15px;">
+                  <content-placeholders-heading :img="true" />
+                  <content-placeholders-text :lines="2" />
+                </content-placeholders>
+                <md-card-header v-if="event.users.created">
+                  <md-avatar>
+                    <img :src="event.users.created.photoUrl" alt="user image" style="background: #eee;">
+                  </md-avatar>
 
-              <content-placeholders v-if="!snapshot" rounded>
-                <content-placeholders-heading :img="true" />
-                <content-placeholders-text :lines="3" />
-              </content-placeholders>
-
-              <div v-else class="media">
-                <div class="media-left">
-                  <figure class="image is-48x48">
-                    <progressive-img
-                      :src="event.users.created.photoUrl"
-                      :aspect-ratio="1"
-                      alt="user image"
-                      style="border-radius: 50%; background: #eee;"/>
-                  </figure>
-                </div>
-                <div class="media-content is-clipped">
-                    <p class="title is-4">
-                      <router-link :to="{ name: 'user', params: { id: event.users.created.id } }">{{ event.users.created.name}}</router-link>
-                    </p>
-                    <p class="subtitle is-6">
-                      <span v-html="eventDistance"/>
-                      <span v-html="eventDates"/>
-                    </p>
-                </div>
-                <div class="media-right">
-                  <font-awesome-icon :icon="event.icon"/>
-                </div>
-              </div>
-
-              <div v-if="snapshot" class="content">
-                <p v-html="event.description"></p>
-              </div>
-
-              <div v-if="snapshot" class="content">
-                <div class="columns is-mobile">
-                  <div class="column is-narrow">
-                    <span class="button is-outlined is-success">Interested: {{ numLiked }}</span>
+                  <div class="md-title">
+                    {{ event.users.created.name }}
+                    <font-awesome-icon :icon="event.icon" style="float: right; font-size: 18px;"/>
                   </div>
-                  <div class="column has-text-centered" style="padding-left: 0; padding-right: 0;">
-                    &nbsp;
+                  <div class="md-subhead">
+                    <md-icon class="subtitle-icon">location_on</md-icon>
+                    <span v-html="eventDistance"/> - <span v-html="eventDates"/>
                   </div>
-                  <div class="column is-narrow">
-                    <span @click="toggle = !toggle" class="button is-outlined is-danger">Not Interested: {{ numDisliked }}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+                </md-card-header>
+                <md-card-content>
+                  <span v-html="event.description"/>
+                </md-card-content>
+              </md-card-content>
+            </md-card>
           </div>
         </div>
         <div class="tile is-parent is-paddingless-touch">
-          <div class="tile is-child card">
+          <div class="tile is-child card" style="z-index: 1; box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12); border-radius: 2px;">
             <event-map v-if="event.location.lat" :event="event"/>
             <div v-else>else</div>
           </div>
@@ -88,24 +64,24 @@
 </template>
 
 <script lang="ts">
+import { Action } from 'vuex-class'
 import { Component, Emit, Inject, Model, Prop, Provide, Vue, Watch } from 'vue-property-decorator'
-import { Mutation } from 'vuex-class'
 import axios from 'axios'
 import Color from 'color'
 import firebase from 'firebase'
 import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
-import EventMap from '@/components/maps/EventMap'
+import EventMap from '@/components/maps/EventMap.vue'
 import moment from 'moment'
-import ScrollToTop from '../../components/layout/fab/ScrollToTop'
-import UserTagList from '@/components/users/TagList'
+import ScrollToTop from '../../components/layout/fab/ScrollToTop.vue'
+import UserTagList from '@/components/users/TagList.vue'
 
 @Component({
   name: 'ShowEvent',
   components: { EventMap, FontAwesomeIcon, ScrollToTop, UserTagList }
 })
 export default class ShowEvent extends Vue {
-  @Mutation('setError') setError
-  @Mutation('setGradient') setGradient
+  @Action('setError') setError
+  @Action('setGradient') setGradient
 
   snapshot: any = null
   imageRef: any = null

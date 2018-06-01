@@ -1,41 +1,41 @@
 <template>
-  <div class="column is-half">
-    <router-link :to="{ name: 'show-event', params: { id }}">
-    <div class="card">
-      <div class="card-image">
-        <progressive-img
-          :src="imageUrl"
-          :aspect-ratio="aspectRatio">
-          <div
-            slot-scope="{ visible }"
-            v-if="visible"
-            style="height: 100%;"
-            :style="'background: ' + event.theme + ';'">
-          </div>
-        </progressive-img>
-      </div>
-      <div class="card-content" style="padding: 1rem;">
-        <content-placeholders v-if="!snapshot.event.description" rounded>
-          <content-placeholders-text :lines="2" />
-        </content-placeholders>
-        <div v-else class="media">
-          <div class="media-content is-clipped">
-              <p class="title is-5 no-wrap-elipsis">
-                {{ event.description }}
-              </p>
-              <p class="subtitle is-6">
-                <span v-html="eventDistance"/>
-                <span v-html="eventDates"/>
-              </p>
-          </div>
-          <div class="media-right">
-            <font-awesome-icon :icon="event.icon"/>
-          </div>
-        </div>
-      </div>
-    </div>
-    </router-link>
-  </div>
+  <router-link :to="{ name: 'show-event', params: { id }}">
+    <md-card md-with-hover style="margin-bottom: 0px;">
+      <md-ripple>                 
+        <md-card-media>
+          <progressive-img
+            :src="imageUrl"
+            :aspect-ratio="aspectRatio">
+            <div
+              slot-scope="{ visible }"
+              v-if="visible"
+              style="height: 100%;"
+              :style="'background: ' + event.theme + ';'">
+            </div>
+          </progressive-img>
+        </md-card-media>
+        <md-card-content style="padding: 0;">
+          <content-placeholders v-if="!snapshot.event.description" rounded>
+            <content-placeholders-text :lines="2" />
+          </content-placeholders>
+          <md-list v-else class="md-double-line" style="padding: 0;">
+            <md-list-item>
+              <div class="md-list-item-text">
+                <span>{{ event.description }}</span>
+                <span>
+                  <md-icon class="subtitle-icon">location_on</md-icon> {{ eventDistance }} - {{ eventDates }}</span>
+              </div>
+        
+              <md-button class="md-icon-button md-list-action">
+                <!-- <md-icon>pets</md-icon> -->
+                <font-awesome-icon :icon="event.icon"/>
+              </md-button>
+            </md-list-item>
+          </md-list>
+        </md-card-content>
+      </md-ripple>
+    </md-card>
+  </router-link>
 </template>
 
 
@@ -116,7 +116,7 @@ export default class FixedHeightCard extends Vue {
         // distance in m to nearest 10m
         return (Math.round(dist / 10) * 10) + 'm'
       default:
-        return 'Right here!'
+        return 'here!'
     }
   }
 

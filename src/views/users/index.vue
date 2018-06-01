@@ -2,13 +2,13 @@
   <section class="section is-paddingless-touch">
     <div class="container">
       <div class="tile is-ancestor is-marginless">
-        <div class="tile is-5 is-vertical is-parent is-paddingless-touch">
+        <div class="tile is-4 is-vertical is-parent is-paddingless-touch">
           <div class="tile is-child" style="max-height: max-content;">
             <user-card :user="user"/>
           </div>
           <div class="tile is-child is-hidden-touch"></div>
         </div>
-        <div class="tile is-7 is-parent is-vertical">
+        <div class="tile is-8 is-parent is-vertical">
           <div v-if="loading.userEvents" class="has-text-centered" style="margin: 1.5rem;">
             <font-awesome-icon icon="spinner" spin size="2x"/>
           </div>

@@ -15,6 +15,17 @@ import VuexGeolocation from 'vuex-geolocation'
 import VueProgressiveImage from 'vue-progressive-image'
 import VueContentPlaceholders from 'vue-content-placeholders'
 
+import VueMaterial from 'vue-material'
+import 'vue-material/dist/vue-material.min.css'
+
+import Vue2TouchEvents from 'vue2-touch-events'
+import VueTimepicker from 'vue2-timepicker'
+
+Vue.use(VueTimepicker)
+Vue.use(Vue2TouchEvents)
+
+Vue.use(VueMaterial)
+
 Vue.use(VueProgressiveImage, {
   // delay: 5000 // 5 seconds before the image is displayed
 })
@@ -32,10 +43,10 @@ import store from './store'
 // Require the main scss manifest file
 import './assets/scss/index.scss'
 
-Vue.use(Buefy, {
-  // Override material design icon default
-  defaultIconPack: 'fas',
-})
+// Vue.use(Buefy, {
+//   // Override material design icon default
+//   defaultIconPack: 'fas',
+// })
 
 // Import fontawesome libs
 fontawesome.library.add(

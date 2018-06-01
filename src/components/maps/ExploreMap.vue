@@ -1,7 +1,7 @@
 <template>
   <section class="hero">
     <div class="hero-body is-paddingless">
-      <GmapMap
+      <gmap-map
         ref="mapRef"
         :center="location"
         :zoom="14"
@@ -15,16 +15,23 @@
           :editable="false">
         </gmap-polygon>
 
-        <GmapMarker
+        <gmap-marker
+          :position="userMarker.position"
+          :clickable="true"
+          :draggable="false"
+          :icon="userMarker.icon"
+          @click="mapPanTo(userMarker.position)"
+        />
+
+        <gmap-marker
+          v-for="(m, index) in eventMarkers"
           :key="index"
-          v-for="(m, index) in markers"
           :position="m.position"
           :clickable="true"
           :draggable="false"
           :icon="m.icon"
-          @click="mapPanTo(m.position)"
         />
-      </GmapMap>
+      </gmap-map>
     </div>
   </section>
 </template>
@@ -40,21 +47,28 @@ import firebase from 'firebase'
 })
 export default class ExploreMap extends Vue {
   @Prop() events: any
-  eventMarkers = []
 
   // initial data
-  windowHeight: number = window.innerHeight - 41 - 52 // tab header
+  get windowHeight (): number {
+    switch (true) {
+      case (window.innerWidth > 960):
+        return window.innerHeight - 64
+      case (window.innerWidth > 600):
+        return window.innerHeight - 48
+      default:
+        return window.innerHeight - 56
+    }
+  }
   
-  // default to London, UK
-  // center: any = {
-  //   lat: 43.6532, // 51.5074,
-  //   lng: -79.3832 // -0.1278
-  // }
   get location () {
     return new google.maps.LatLng(
       this.$store.state.geolocation.lat,
       this.$store.state.geolocation.lng
     )
+  }
+
+  getLatLng (lat, lng) {
+    return new google.maps.LatLng(lat, lng)
   }
 
   get mapPolygonPaths () {
@@ -91,25 +105,7 @@ export default class ExploreMap extends Vue {
     disableDefaultUI: true,
   }
 
-  get markers () {
-    return [
-      this.getUserMarker(),
-      ...this.eventMarkers
-      // {
-      //   position: this.event.location,
-      //   icon: {
-      //     url: this.getMarkerURI(this.getRandomMarkerId())
-      //   }
-      // }
-    ]
-  }
-
-  // lifecycle hook
-  mounted () {
-    this.setEventMarkers()
-  }
-
-  getUserMarker () {
+  get userMarker () {
     return {
       position: this.location,
       icon: {
@@ -118,18 +114,29 @@ export default class ExploreMap extends Vue {
     }
   }
 
-  setEventMarkers () {
-    for (event of this.events) {
-      firebase.database().ref('/events/' + event).once('value')
-        .then(snapshot => {
-          let e = snapshot.val()
-          this.eventMarkers.push({
-            id: e.id,
-            icon: e.icon,
-            location: e.location
-          })
-        })
+  get eventMarkers () {
+    let array = []
+    for (var key in this.events) {
+      // skip loop if the property is from prototype
+      if (!this.events.hasOwnProperty(key)) continue;
+
+      var obj = this.events[key];
+
+      let eventId = obj.key
+      let eventObj = obj.val
+
+      array.push({
+        position: new google.maps.LatLng(eventObj.location.lat, eventObj.location.lng),
+        icon: {
+          url: this.getMarkerURI(eventObj.icon)
+        }
+      })
     }
+    return array
+  }
+
+  mounted () {
+    //
   }
 
   // computed
