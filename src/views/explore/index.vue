@@ -1,5 +1,5 @@
 <template>
-  <section class="has-background-white">
+  <section class="has-background-white" style="height: 100%;">
    <explore-map v-if="events.length || initialFetch" :events="events"/>
     <md-empty-state v-else style="height: 100%;">
       <md-button class="md-icon-button md-raised">
