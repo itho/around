@@ -1,8 +1,8 @@
 <template>
   <gmap-map
     ref="mapRef"
-    :center="location"
-    :zoom="14"
+    :center="initialLocation"
+    :zoom="15"
     :style="'width: 100%; height: ' + computedHeight"
     :options="mapOptions"
     map-type-id="roadmap">
@@ -44,6 +44,8 @@ import firebase from 'firebase'
 })
 export default class ExploreMap extends Vue {
   @Prop() events: any
+
+  initialLocation: any = null
 
   // initial data
   get windowHeight (): number {
@@ -134,7 +136,7 @@ export default class ExploreMap extends Vue {
   }
 
   mounted () {
-    //
+    this.initialLocation = this.location
   }
 
   // computed

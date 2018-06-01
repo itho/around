@@ -288,11 +288,11 @@ export default class NewEvent extends Vue {
             vm.form.locationOptions = results
           }
         } else {
-          vm.setError({ message: 'No location results found!' })
+          // vm.setError({ message: 'No location results found!' })
         }
       } else {
         if (vm.$store.state.geolocation.lat !== null || vm.$store.state.geolocation.lng !== null) {
-          vm.setError({ message: 'Unable to find location' })
+          // vm.setError({ message: 'Unable to find location' })
         }
       }
     })
