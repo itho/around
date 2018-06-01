@@ -9,7 +9,7 @@
       </md-button>
 
       <md-menu-content>
-        <md-menu-item href="#">
+        <md-menu-item href="#" disabled>
           <span>Settings</span>
         </md-menu-item>
         <md-menu-item @click="onSignOut()">
