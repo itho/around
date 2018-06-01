@@ -126,7 +126,7 @@
                     <font-awesome-icon :icon="item.icon" style="float: right; font-size: 18px;"/>
                   </div>
                   <div class="md-subhead">
-                    <md-icon class="subtitle-icon">location_on</md-icon> - {{ item.time }}
+                    <md-icon class="subtitle-icon">location_on</md-icon> {{ item.time }}
                   </div>
                 </md-card-header>
                 <md-card-content>
@@ -161,9 +161,9 @@ export default class Home extends Vue {
   // randomuser.me data object
   randomUsers: any = false
   examplePosts: object = [
-    { img: '/static/img/home/coffee-640-360.png', time: '1.2 km - moments ago', icon: 'coffee', text: 'Just got some Blue Mountain Coffee, you need to come try this!! <a>#coffee</a> <a>#coffeelover</a>' },
-    { img: '/static/img/home/basketball-640-360.png', time: '2.4 km - 1.5 hours ago', icon: 'basketball-ball', text: 'Making the most of this weather by shooting some hoops out by the beach. 🙌 <a>#basketball</a>' },
-    { img: '/static/img/home/cocktails-640-360.png', time: '400m - 45 minutes ago', icon: 'glass-martini', text: 'TGIF! Celebrating the end of the week by staying out all night! <a>#cocktails</a> <a>#party</a>' }
+    { img: '/static/img/home/coffee-640-360.png', time: '1.2 km - Fri, 4pm - 7pm', icon: 'coffee', text: 'Just got some Blue Mountain Coffee, you need to come try this!! <a>#coffee</a> <a>#coffeelover</a>' },
+    { img: '/static/img/home/basketball-640-360.png', time: '2.4 km - Sat, 11am - 4pm', icon: 'basketball-ball', text: 'Making the most of this weather by shooting some hoops out by the beach. 🙌 <a>#basketball</a>' },
+    { img: '/static/img/home/cocktails-640-360.png', time: '400m - Fri, 9pm - 2am', icon: 'glass-martini', text: 'TGIF! Celebrating the end of the week by staying out all night! <a>#cocktails</a> <a>#party</a>' }
   ]
 
   mounted () {
