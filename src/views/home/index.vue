@@ -87,42 +87,54 @@
     </section>
 
     <section class="hero">
-      <img src="/static/img/home/example-map.png" style="witdh: 100%; height: auto;"/>
+      <!-- <img src="/static/img/home/example-map.png" style="witdh: 100%; height: auto;"/> -->
+      <progressive-img
+        src="/static/img/home/example-map.png"
+        :aspect-ratio="9/16">
+        <div
+          slot-scope="{ visible }"
+          v-if="visible"
+          style="height: 100%; background: #eee">
+        </div>
+      </progressive-img>
     </section>
 
     <section v-if="randomUsers" class="section has-background-white-90">
       <div class="container">
         <div class="columns">
           <div v-for="(item, i) in examplePosts" :key="i" class="column">
-            <div class="card">
-              <div class="card-image">
-                <figure class="image is-16by9">
-                  <img :src="item.img" alt="post image">
-                </figure>
-              </div>
-              <div class="card-content">
-                <div class="media">
-                  <div class="media-left">
-                    <figure class="image is-48x48">
-                      <img :src="getRandomUserPicture(i)" alt="user image" style="border-radius: 50%;">
-                    </figure>
+            <md-card md-with-hover style="margin-bottom: 0px;">                 
+              <md-card-media>
+                <progressive-img
+                  :src="item.img"
+                  :aspect-ratio="9/16">
+                  <div
+                    slot-scope="{ visible }"
+                    v-if="visible"
+                    style="height: 100%; background: #eee">
                   </div>
-                  <div class="media-content is-clipped">
-                    <p class="title is-4">{{ getRandomUserName(i) }}</p>
-                    <p class="subtitle is-6">
-                      {{ item.time }}
-                    </p>
+                </progressive-img>
+              </md-card-media>
+              <md-card-content style="padding: 0;">
+                <md-card-header>
+                  <md-avatar>
+                    <img :src="getRandomUserPicture(i)" alt="user image" style="background: #eee;">
+                  </md-avatar>
+
+                  <div class="md-title">
+                    {{ getRandomUserName(i) }}
+                    <font-awesome-icon :icon="item.icon" style="float: right; font-size: 18px;"/>
                   </div>
-                  <div class="media-right">
-                    <font-awesome-icon :icon="item.icon"/>
+                  <div class="md-subhead">
+                    <md-icon class="subtitle-icon">location_on</md-icon> - {{ item.time }}
                   </div>
-                </div>
-                <div class="content">
-                  <p v-html="item.text"></p>
+                </md-card-header>
+                <md-card-content>
+                  <span v-html="item.text"/>
                   <p class="subtitle is-7 has-text-right">example post</p>
-                </div>
-              </div>
-            </div>
+                </md-card-content>
+              </md-card-content>
+            </md-card>
           </div>
         </div>
       </div>
