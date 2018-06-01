@@ -3,7 +3,7 @@
    <explore-map v-if="events.length || initialFetch" :events="events"/>
     <md-empty-state v-else style="height: 100%;">
       <md-button class="md-icon-button md-raised">
-        <md-progress-spinner :md-diameter="25" :md-stroke="2" md-mode="indeterminate"></md-progress-spinner>
+        <md-progress-spinner style="margin-top: 2px;" :md-diameter="20" :md-stroke="2" md-mode="indeterminate"></md-progress-spinner>
       </md-button>
     </md-empty-state>
 

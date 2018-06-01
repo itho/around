@@ -1,39 +1,35 @@
 <template>
-  <section class="hero">
-    <div class="hero-body is-paddingless">
-      <gmap-map
-        ref="mapRef"
-        :center="location"
-        :zoom="14"
-        :style="'width: 100%; height: ' + computedHeight"
-        :options="mapOptions"
-        map-type-id="roadmap">
-      >
-        <gmap-polygon
-          :paths="mapPolygonPaths"
-          :options="mapPolygonOptions"
-          :editable="false">
-        </gmap-polygon>
+  <gmap-map
+    ref="mapRef"
+    :center="location"
+    :zoom="14"
+    :style="'width: 100%; height: ' + computedHeight"
+    :options="mapOptions"
+    map-type-id="roadmap">
+  >
+    <gmap-polygon
+      :paths="mapPolygonPaths"
+      :options="mapPolygonOptions"
+      :editable="false">
+    </gmap-polygon>
 
-        <gmap-marker
-          :position="userMarker.position"
-          :clickable="true"
-          :draggable="false"
-          :icon="userMarker.icon"
-          @click="mapPanTo(userMarker.position)"
-        />
+    <gmap-marker
+      :position="userMarker.position"
+      :clickable="true"
+      :draggable="false"
+      :icon="userMarker.icon"
+      @click="mapPanTo(userMarker.position)"
+    />
 
-        <gmap-marker
-          v-for="(m, index) in eventMarkers"
-          :key="index"
-          :position="m.position"
-          :clickable="true"
-          :draggable="false"
-          :icon="m.icon"
-        />
-      </gmap-map>
-    </div>
-  </section>
+    <gmap-marker
+      v-for="(m, index) in eventMarkers"
+      :key="index"
+      :position="m.position"
+      :clickable="true"
+      :draggable="false"
+      :icon="m.icon"
+    />
+  </gmap-map>
 </template>
 
 <script lang="ts">
