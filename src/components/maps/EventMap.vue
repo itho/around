@@ -184,7 +184,7 @@ export default class EventMap extends Vue {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   @media (max-width: 768px) {
     .vue-map-container {
       height: 300px !important;
