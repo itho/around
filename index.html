@@ -29,6 +29,8 @@
     <style>
       #splash {
         position: fixed;
+        top: 0;
+        left: 0;
         height: 100vh;
         width: 100vw;
         z-index: 999;
@@ -44,11 +46,13 @@
     </style>
   </head>
   <body>
-    <noscript>
-      For full functionality of this site it is necessary to enable JavaScript. Here are the instructions how to enable
-      JavaScript in your web browser: <a href="https://www.enable-javascript.com/" target="_blank">www.enable-javascript.com</a>.
-    </noscript>
-    <div id="splash"></div>
+    <div id="splash">
+      <noscript style="color: whitesmoke; padding: 15px; font-family: Roboto,Noto Sans,-apple-system,BlinkMacSystemFont,sans-serif;">
+        For full functionality of this site it is necessary to enable JavaScript.<br>
+        Here are the instructions how to enable JavaScript in your web browser:<br>
+        <a style="color: lightblue" href="https://www.enable-javascript.com/" target="_blank">www.enable-javascript.com</a>
+      </noscript>
+    </div>
     <div id="app"></div>
     <!-- Todo: only include in production -->
     <%= htmlWebpackPlugin.options.serviceWorkerLoader %>
