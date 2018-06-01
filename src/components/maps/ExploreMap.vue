@@ -28,6 +28,7 @@
       :clickable="true"
       :draggable="false"
       :icon="m.icon"
+      @click="goTo(m.id)"
     />
   </gmap-map>
 </template>
@@ -122,6 +123,7 @@ export default class ExploreMap extends Vue {
       let eventObj = obj.val
 
       array.push({
+        id: eventId,
         position: new google.maps.LatLng(eventObj.location.lat, eventObj.location.lng),
         icon: {
           url: this.getMarkerURI(eventObj.icon)
@@ -225,6 +227,10 @@ export default class ExploreMap extends Vue {
 
   mapPanTo (position: any) {
     this.$refs.mapRef.panTo(position)
+  }
+
+  goTo (id: string) {
+    this.$router.push({ name: 'show-event', params: { id }})
   }
 
   logPosition () {

@@ -18,8 +18,7 @@
       <gmap-polygon
         :paths="mapPolygonPaths"
         :options="mapPolygonOptions"
-        :editable="false"
-        @paths_changed="updateEdited($event)">
+        :editable="false">
       </gmap-polygon>
 
       <GmapMarker
