@@ -9,7 +9,10 @@
           </div>
           <div class="tile is-child is-hidden-touch"></div>
         </div>
-        <div class="tile is-8 is-parent is-vertical">
+        <div v-if="noUserEvents" class="tile is-8 is-parent is-vertical">
+          <user-events-not-found/>
+        </div>
+        <div v-else class="tile is-8 is-parent is-vertical">
           <div v-if="loading.userEvents" class="has-text-centered" style="margin: 1.5rem;">
             <font-awesome-icon icon="spinner" spin size="2x"/>
           </div>
@@ -43,6 +46,7 @@ import firebase from 'firebase'
 import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
 import ScrollToTop from '@/components/layout/fab/ScrollToTop.vue'
 import UserCard from '@/components/users/FullHeightCard.vue'
+import UserEventsNotFound from '@/components/errors/UserEventsNotFound.vue'
 import UserNotFound from '@/components/errors/UserNotFound.vue'
 
 
@@ -53,6 +57,7 @@ import UserNotFound from '@/components/errors/UserNotFound.vue'
     FontAwesomeIcon,
     ScrollToTop,
     UserCard,
+    UserEventsNotFound,
     UserNotFound
   }
 })
@@ -60,6 +65,8 @@ export default class ShowEvent extends Vue {
   @Mutation('setError') setError
 
   doesNotExist: boolean = false
+  noUserEvents: boolean = false
+
   loading: any = {
     user: true,
     userEvents: true
@@ -153,6 +160,10 @@ export default class ShowEvent extends Vue {
       .then(snapshot => {
         this.snapshot.userEvents = snapshot.val()
         this.loading.userEvents = false
+
+        if (!this.snapshot.userEvents) {
+          this.noUserEvents = true
+        }
       })
       .catch(error => {
         this.setError(error)
