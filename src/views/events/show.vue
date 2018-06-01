@@ -41,6 +41,21 @@
                   <span v-html="event.description"/>
                 </md-card-content>
               </md-card-content>
+              <md-card-actions style="justify-content: space-evenly;">
+                <md-button class="md-icon-button" @click="toggleUserReport()">
+                  <md-icon v-if="userReportedEvent" style="color: orangered;">sentiment_very_dissatisfied</md-icon>
+                  <md-icon v-else>sentiment_very_dissatisfied</md-icon>
+                </md-button>
+
+                <md-button class="md-icon-button" @click="toggleUserLike()">
+                  <md-icon v-if="userLikesEvent" style="color: gold;">star</md-icon>
+                  <md-icon v-else >star_border</md-icon>
+                </md-button>
+
+                <md-button v-if="shareSupported" @click="shareEvent()" class="md-icon-button">
+                  <md-icon>share</md-icon>
+                </md-button>
+              </md-card-actions>
             </md-card>
           </div>
         </div>
@@ -65,7 +80,7 @@
 </template>
 
 <script lang="ts">
-import { Action } from 'vuex-class'
+import { Action , Getter } from 'vuex-class'
 import { Component, Emit, Inject, Model, Prop, Provide, Vue, Watch } from 'vue-property-decorator'
 import axios from 'axios'
 import Color from 'color'
@@ -90,14 +105,15 @@ import UserTagList from '@/components/users/TagList.vue'
 export default class ShowEvent extends Vue {
   @Action('setError') setError
   @Action('setGradient') setGradient
+  @Getter('user') user
 
   doesNotExist: boolean = false
   snapshot: any = null
   imageRef: any = null
   aspectRatio: number = null
 
-  randomUsers: any = null
-  toggle: boolean = false
+  userLikesEvent: boolean = false
+  userReportedEvent: boolean = false
 
   users: any = {
     created: {
@@ -226,8 +242,8 @@ export default class ShowEvent extends Vue {
         
         if (this.snapshot) {
           this.getEventImage()
-          this.getEventUsers()
           this.getEventColors()
+          this.getEventUsers()
         } else {
           this.doesNotExist = true
         }
@@ -295,6 +311,8 @@ export default class ShowEvent extends Vue {
       firebase.database().ref('users/' + uid).once('value')
         .then(user => {
           this.users.liked.push(user.val())
+          if (this.snapshot.users.liked[uid] && user.val().photoUrl === this.user.photoUrl)
+            this.userLikesEvent = true
         })
         .catch(error => {
           // add the error to the vuex state
@@ -306,6 +324,8 @@ export default class ShowEvent extends Vue {
       firebase.database().ref('users/' + uid).once('value')
         .then(user => {
           this.users.reported.push(user.val())
+          if (this.snapshot.users.reported[uid] && user.val().photoUrl === this.user.photoUrl)
+            this.userReportedEvent = true
         })
         .catch(error => {
           // add the error to the vuex state
@@ -333,6 +353,78 @@ export default class ShowEvent extends Vue {
     }
 
     return num
+  }
+
+  async toggleUserLike () {
+    if (this.user.id = this.$route.params.id) {
+      this.setError({ message: 'You can\'t unlike your own event.'  })
+      return
+    }
+
+    let newVal = (this.userLikesEvent)
+      ? false
+      : new Date().getTime()
+    
+    const updates = {}
+    updates['/events/' + this.$route.params.id + '/users/liked/' + this.user.id] = newVal
+    updates['/user-events/' + this.user.id + '/liked/' + this.$route.params.id] = newVal
+
+    await firebase.database()
+      .ref()
+      .update(updates)
+      .then(response => {
+        this.snapshot.users.liked[this.user.id] = newVal
+        this.userLikesEvent = !this.userLikesEvent
+      })
+      .catch(error => {
+        this.setError({ message: error.message })
+      })
+  }
+
+  async toggleUserReport () {
+    if (this.user.id = this.$route.params.id) {
+      this.setError({ message: 'You can\'t report your own event.'  })
+      return
+    }
+
+    let newVal = (this.userReportedEvent)
+      ? false
+      : new Date().getTime()
+    
+    const updates = {}
+    updates['/events/' + this.$route.params.id + '/users/reported/' + this.user.id] = newVal
+    updates['/user-events/' + this.user.id + '/reported/' + this.$route.params.id] = newVal
+
+    await firebase.database()
+      .ref()
+      .update(updates)
+      .then(response => {
+        this.userReportedEvent = !this.userReportedEvent
+      })
+      .catch(error => {
+        this.setError({ message: error.message })
+      })
+  }
+
+  get shareSupported () {
+    let nav: any;
+    nav = window.navigator
+    return !!(nav.share)
+  }
+
+  shareEvent () {
+    // Typescript doesn't like navigator.share
+    let nav: any;
+    nav = window.navigator
+    if (nav && nav.share) {
+      nav.share({
+          title: 'Around Event',
+          text: this.event.description,
+          url: document.location.href,
+      })
+        .then(() => console.log('Successful share'))
+        .catch((error) => console.log('Error sharing', error));
+    }
   }
 }
 </script>
