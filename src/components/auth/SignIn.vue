@@ -1,34 +1,44 @@
 <template>
-  <b-modal :active.sync="isActive" has-modal-card>
-    <div class="card" style="max-width: 450px;">
-      <div class="card-content">
-        <p class="title is-4">Sign in with your preferred account</p>
+  <md-dialog :md-active.sync="isActive">
+    <md-dialog-title>Sign in with your preferred account</md-dialog-title>
+    <md-dialog-content style="max-width: 500px;">
 
-        <a class="button block firebaseui-idp firebaseui-idp-google" @click.prevent="onSigninGoogle">
-          <span class="firebaseui-idp-icon-wrapper">
-            <img class="firebaseui-idp-icon" alt="" src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg">
-          </span>
-          <span class="firebaseui-idp-text google">Sign in with Google</span>
-        </a>
+      <md-button class="md-raised firebaseui-idp firebaseui-idp-google" @click.prevent="onSigninGoogle">
+        <span class="firebaseui-idp-icon-wrapper">
+          <img class="firebaseui-idp-icon" alt="" src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg">
+        </span>
+        <span class="firebaseui-idp-text google">
+          Sign in with Google
+        </span>
+      </md-button>
 
-        <a dark class="button block firebaseui-idp firebaseui-idp-facebook" @click="signIn('facebook')" disabled>
-          <span class="firebaseui-idp-icon-wrapper">
-            <img class="firebaseui-idp-icon" alt="" src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/facebook.svg">
-          </span>
-          <span class="firebaseui-idp-text facebook">Sign in with Facebook</span>
-        </a>
+      <md-button class="md-raised firebaseui-idp firebaseui-idp-facebook" disabled>
+        <span class="firebaseui-idp-icon-wrapper">
+          <img class="firebaseui-idp-icon" alt="" src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/facebook.svg">
+        </span>
+        <span class="firebaseui-idp-text facebook">
+          Sign in with Facebook
+        </span>
+      </md-button>
 
-        <a dark class="button block firebaseui-idp firebaseui-idp-twitter" @click="signIn('twitter')" disabled>
-          <span class="firebaseui-idp-icon-wrapper">
-            <img class="firebaseui-idp-icon" alt="" src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/twitter.svg">
-          </span>
-          <span class="firebaseui-idp-text twitter">Sign in with Twitter</span>
-        </a>
-        
-        <p class="subtitle is-7">By using our service you agree to our <a>terms</a> and <a>privacy policy</a>.</p>
-      </div>
-    </div>
-  </b-modal>
+      <md-button class="md-raised firebaseui-idp firebaseui-idp-twitter" disabled>
+        <span class="firebaseui-idp-icon-wrapper">
+          <img class="firebaseui-idp-icon" alt="" src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/twitter.svg">
+        </span>
+        <span class="firebaseui-idp-text twitter">
+          Sign in with Twitter
+        </span>
+      </md-button>
+      
+      
+      <md-checkbox v-model="legal" class="md-primary has-text-danger">
+        <p class="subtitle is-7" style="margin-top: 2px;" :class="{ 'has-text-danger': (error && !legal) }">
+          I have read &amp; agree to the <a>terms</a> and <a>privacy policy</a>.
+        </p>
+      </md-checkbox>
+
+    </md-dialog-content>
+  </md-dialog>
 </template>
 
 <script lang="ts">
@@ -41,6 +51,9 @@ import { Action, Getter } from 'vuex-class'
 export default class SignIn extends Vue {
   @Getter('signInModal') signInModalState
   @Action('toggleSignInModal') toggleSignInModal
+
+  legal: boolean = false
+  error: boolean = false
 
   get isActive (): boolean {
     return this.signInModalState
@@ -56,8 +69,12 @@ export default class SignIn extends Vue {
   //   this.$store.dispatch('signUserIn', {email: this.email, password: this.password})
   // }
   onSigninGoogle () {
-    let redirect = this.$route.query.redirect
-    this.$store.dispatch('signUserInGoogle', redirect)
+    if (this.legal) {
+      let redirect = this.$route.query.redirect
+      this.$store.dispatch('signUserInGoogle', redirect)
+    } else {
+      this.error = true
+    }
   }
   onSigninFacebook () {
     this.$store.dispatch('signUserInFacebook')
@@ -85,6 +102,7 @@ export default class SignIn extends Vue {
   .firebaseui-idp {
     width: 100%;
     height: 40px;
+    margin: 8px 0px;
   }
   .firebaseui-idp-icon-wrapper {
     display: table-cell;
@@ -111,6 +129,10 @@ export default class SignIn extends Vue {
   }
   .firebaseui-idp-facebook {
     background-color: #3b5998 !important;
+  }
+  .firebaseui-idp-facebook:disabled {
+    background-color: #869ECC !important;
+    cursor: not-allowed !important;
   }
   .firebaseui-idp-twitter {
     background-color: #4099FF !important;

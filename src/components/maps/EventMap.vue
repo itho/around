@@ -1,18 +1,17 @@
 <template>
-  <div class="event-map" style="width: 100%; height: 100%;">
-    <a
-      class="button is-primary"
-      style="position: absolute; z-index: 9; margin: 5px;"
+  <div class="event-map" style="width: 100%; height: 100%; min-height: 250px;">
+    <md-button
       :href="'http://maps.google.com/maps?daddr=' + this.location.lat + ',' + this.location.lng + '&amp;ll='"
-      target="_blank">
-      <font-awesome-icon :icon="['far', 'map']" pull="left"/>
-      Directions
-    </a>
+      target="_blank"
+      class="md-icon-button md-raised md-primary"
+      style="position: absolute; z-index: 9; margin: 5px;">
+        <md-icon>directions</md-icon>
+    </md-button>
     <GmapMap
       ref="mapRef"
       :center="event.location"
       :zoom="14"
-      :style="'width: 100%; height: 100%;'"
+      style="width: 100%; height: 100%;"
       :options="mapOptions"
       map-type-id="roadmap">
     >
@@ -186,4 +185,10 @@ export default class EventMap extends Vue {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss">
+  @media (max-width: 768px) {
+    .vue-map-container {
+      height: 300px !important;
+    }
+  }
+</style>

@@ -39,7 +39,7 @@ export default new Router({
     },
     {
       path: '/events/new',
-      name: 'new-event',
+      name: 'create',
       component: NewEventView,
       beforeEnter: (to, from, next) => {
         Guard.authCheck(to, from, next)

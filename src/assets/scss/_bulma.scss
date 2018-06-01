@@ -43,6 +43,10 @@ $link-focus-border: $primary;
   background-color: rgba(255, 255, 255, 0.9);
 }
 
+.is-borderless {
+  border: none !important;
+}
+
 // overrides
 .has-navbar-fixed-top {
   margin-top: 52px;
