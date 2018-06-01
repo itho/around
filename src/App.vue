@@ -19,6 +19,7 @@
         <nav-user-card :user="user"/>
         <nav-user-links v-if="userIsAuthenticated" @close-menu="menuVisible = false"/>
         <nav-guest-links v-else @close-menu="menuVisible = false"/>
+        <p id="version">v0.1.0</p>
       </md-app-drawer>
 
       <md-app-content class="is-paddingless is-borderless">
@@ -135,5 +136,12 @@ export default class App extends Vue {
   #nav-home-link {
     color: white;
     text-decoration: none;
+  }
+
+  #version {
+    color: slategrey;
+    position: absolute;
+    bottom: 0;
+    padding: 15px;
   }
 </style>

@@ -26,8 +26,8 @@
       <span class="md-list-item-text" :class="activeRoute('create')">Create</span>
     </md-list-item>
 
-    <md-list-item href="#">
-      <md-icon>settings</md-icon>
+    <md-list-item href="#" disabled>
+      <md-icon style="color: lightgrey;">settings</md-icon>
       <span class="md-list-item-text">Settings</span>
     </md-list-item>
 
