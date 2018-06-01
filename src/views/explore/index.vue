@@ -66,12 +66,26 @@ export default class Explore extends Vue {
     let onKeyEnteredRegistration = geoQuery.on("key_entered", function(key, location) {
       firebase.database().ref('/events/' + key).once('value')
         .then(snapshot => {
-          vm.events.push({ key, val: snapshot.val() })
+          if (!vm.events.some(e => e.key === key)) {
+            /* vendors doesn't contain the element we're looking for */
+            vm.events.push({ key, val: snapshot.val() })
+          }
         })
     });
 
     let onKeyExitedRegistration = geoQuery.on("key_exited", function(key, location) {
-      // vm.events[key] = null
+      // ToDo: remove keys on exit
+      // if (vm.events.some(e => e.key === key)) {
+      //   /* vendors contains the element we're looking for */
+      //   //vm.events.splice(index, 1);
+        
+      //   const toDelete = new Set([key]);
+      //   vm.events = vm.events.filter(obj => !toDelete.has(obj.key));
+      // }
+      // let index = vm.events.indexOf(key)
+      // if (index > -1) {
+      //   vm.events.splice(index, 1);
+      // }
     });
 
     this.initialFetch = true
