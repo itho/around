@@ -4,7 +4,7 @@
     :md-size="380"
     md-rounded
     md-icon="search"
-    md-label="No events not found!">
+    md-label="No events found!">
   </md-empty-state>
 </template>
 
