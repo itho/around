@@ -1,6 +1,7 @@
 <template>
   <section class="section is-paddingless-touch">
-    <div class="container">
+    <event-not-found v-if="doesNotExist"/>
+    <div v-else class="container">
       <div class="tile is-ancestor is-marginless">
         <div class="tile is-5 is-vertical is-parent is-paddingless-touch">
           <div class="tile is-child">
@@ -12,7 +13,7 @@
                   <div
                     slot-scope="{ visible }"
                     v-if="visible"
-                    style="height: 100%;"
+                    style="height: 100%; background: #eee;"
                     :style="(event.theme) ? 'background: ' + event.theme + ';' : ''">
                   </div>
                 </progressive-img>
@@ -46,7 +47,7 @@
         <div class="tile is-parent is-paddingless-touch">
           <div class="tile is-child card" style="z-index: 1; box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12); border-radius: 2px;">
             <event-map v-if="event.location.lat" :event="event"/>
-            <div v-else>else</div>
+            <div v-else style="background: #eee; height: 100%; width: 100%;"></div>
           </div>
         </div>
       </div>
@@ -71,18 +72,26 @@ import Color from 'color'
 import firebase from 'firebase'
 import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
 import EventMap from '@/components/maps/EventMap.vue'
+import EventNotFound from '@/components/errors/EventNotFound.vue'
 import moment from 'moment'
 import ScrollToTop from '../../components/layout/fab/ScrollToTop.vue'
 import UserTagList from '@/components/users/TagList.vue'
 
 @Component({
   name: 'ShowEvent',
-  components: { EventMap, FontAwesomeIcon, ScrollToTop, UserTagList }
+  components: {
+    EventMap,
+    EventNotFound,
+    FontAwesomeIcon,
+    ScrollToTop,
+    UserTagList
+  }
 })
 export default class ShowEvent extends Vue {
   @Action('setError') setError
   @Action('setGradient') setGradient
 
+  doesNotExist: boolean = false
   snapshot: any = null
   imageRef: any = null
   aspectRatio: number = null
@@ -214,11 +223,16 @@ export default class ShowEvent extends Vue {
     firebase.database().ref('/events/' + this.$route.params.id).once('value')
       .then(snapshot => {
         this.snapshot = snapshot.val()
-
-        this.getEventImage()
-        this.getEventUsers()
-        this.getEventColors()
+        
+        if (this.snapshot) {
+          this.getEventImage()
+          this.getEventUsers()
+          this.getEventColors()
+        } else {
+          this.doesNotExist = true
+        }
       })
+      .catch(error => { console.log(error) })
   }
 
   beforeDestroy() {
