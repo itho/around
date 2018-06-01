@@ -66,9 +66,11 @@ export default class Explore extends Vue {
     let onKeyEnteredRegistration = geoQuery.on("key_entered", function(key, location) {
       firebase.database().ref('/events/' + key).once('value')
         .then(snapshot => {
-          if (!vm.events.some(e => e.key === key)) {
-            /* vendors doesn't contain the element we're looking for */
-            vm.events.push({ key, val: snapshot.val() })
+          if (new Date().getTime() <= snapshot.val().timestamps.end) {
+            if (!vm.events.some(e => e.key === key)) {
+              /* vendors doesn't contain the element we're looking for */
+              vm.events.push({ key, val: snapshot.val() })
+            }
           }
         })
     });
