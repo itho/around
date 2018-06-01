@@ -21,13 +21,13 @@
 </template>
 
 <script lang="ts">
-import { Action } from 'vuex-class'
+import { Action, Getter } from 'vuex-class'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 
 @Component({ name: 'UserLinks' })
 export default class UserLinks extends Vue {
   @Action('setSuccess') setSuccess
-  @Prop() user: any
+  @Getter('user') user
 
   onSignOut () {
     this.$emit('close-menu')

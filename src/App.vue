@@ -11,13 +11,13 @@
         <h3 class="md-title" style="flex: 1">
           <router-link id="nav-home-link" :to="{ name: 'home' }">around</router-link>
         </h3>
-        <toolbar-user-links v-if="userIsAuthenticated" :user="user" class="is-hidden-touch"/>
+        <toolbar-user-links v-if="userIsAuthenticated" class="is-hidden-touch"/>
         <toolbar-guest-links v-else class="is-hidden-touch"/>
       </md-app-toolbar>
     
       <md-app-drawer :md-active.sync="menuVisible">
         <nav-user-card :user="user"/>
-        <nav-user-links v-if="userIsAuthenticated" :user="user" @close-menu="menuVisible = false"/>
+        <nav-user-links v-if="userIsAuthenticated" @close-menu="menuVisible = false"/>
         <nav-guest-links v-else @close-menu="menuVisible = false"/>
       </md-app-drawer>
 
@@ -99,11 +99,11 @@ export default class App extends Vue {
   }
 
   swipeLeftHandler () {
-    if (this.$route.name !== 'explore') this.menuVisible = false
+    if (this.$route.name !== 'explore' && this.$route.name !== 'show-event') this.menuVisible = false
   }
 
   swipeRightHandler () {
-    if (this.$route.name !== 'explore') this.menuVisible = true
+    if (this.$route.name !== 'explore' && this.$route.name !== 'show-event') this.menuVisible = true
   }
 
   @Watch('$route')
